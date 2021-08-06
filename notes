@@ -1,0 +1,61 @@
+spirit
+- death -> ghost
+- true death -> essence
+
+
+
+the property of the essence
+depends on the nature of the death
+
+LOVE : birth/creation (+)
+DOOM : destruction/death (-)
+HATE : change/manipulation
+
+
+
+potions are
+ingredients bound together by essence
+
+essence can be used to bind resources together
+
+potions can be analyzed by being broken down into the
+essence + ingredients
+
+
+
+i = ingredient
+
+i + water = soup
+soup + essence = potion
+i + essence = dry potion (null effect)
+dry potion + water = potion
+
+potion + heat = dry potion
+potion + freeze = solid potion (effective)
+dry potion + heat = i
+  essence can be burned away
+dry potion + freeze = i + liquid essence
+i + heat = ash
+ash + heat = ash
+ash + water = muck
+
+potion + potion + essence = compound potion
+  potions can be chained together by essence
+
+
+
+should ingredients be reusable when a potion is broken down?
+
+the effectiveness of a potion depends on how dense it is within the liquid
+
+difference in boiling point
+  distillation
+difference in density
+  filtration
+
+
+
+ingredients
+
+"the seeker" - a plant that can sniff things out
+muck - muck

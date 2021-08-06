@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>mor</title>
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=La+Belle+Aurore&display=swap');
+
+        :root {
+            --bg: #fff;
+            --color: #2e231b;
+            --highlight: #cbd5f5;
+
+            --handwritten: 'La Belle Aurore', cursive;
+            --serif: 'Averia Serif Libre', serif;
+
+            --width: 700px;
+        }
+
+        body {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+
+            -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                 -khtml-user-select: none; /* Konqueror HTML */
+                   -moz-user-select: none; /* Old versions of Firefox */
+                    -ms-user-select: none; /* Internet Explorer/Edge */
+                        user-select: none; /* Non-prefixed version, currently
+                                              supported by Chrome, Edge, Opera and Firefox */
+
+            font-smooth: never;
+            -webkit-font-smoothing: none;
+            font-family: var(--serif);
+            font-size: 20px;
+            background: url("paper.jpg");
+            background-size: 70%;
+            margin: 0;
+            color: var(--color);
+
+            cursor: default;
+        }
+
+        #container {
+            position: absolute;
+            left: 50%;
+            top: 10%;
+            transform: translateX(-50%);
+            animation: 1s linear infinite switch-font;
+
+            width: var(--width);
+            text-align: justify;
+
+            mix-blend-mode: multiply;
+        }
+
+        .box {
+            position: relative;
+            /*https://kovart.github.io/dashed-border-generator/*/
+            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='black' stroke-width='1' stroke-dasharray='100%2c 7%2c 20%2c 10%2c 50%2c 9%2c 30%2c 2%2c 100%2c 5' stroke-dashoffset='24'/%3e%3c/svg%3e");
+            padding: 1em;
+            box-sizing: border-box;
+        }
+        .titled::before {
+            position: absolute;
+            content: "title";
+            background: var(--bg);
+            margin-top: -1.5em;
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            width: 100%;
+            /*cursor: default;*/
+        }
+
+        #inventory {
+            float: left;
+            width: calc(var(--width) / 3);
+        }
+
+        .inv {
+            margin-bottom: 1em;
+        }
+
+        #plate {
+            float: right;
+            width: calc(var(--width) * 2/3 - 1em);
+            height: calc(var(--width) * 2/3 - 1em);
+            border-radius: 50%;
+            /*https://kovart.github.io/dashed-border-generator/*/
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='1000000' ry='1000000' stroke='%23333' stroke-width='1' stroke-dasharray='100%2c 7%2c 20%2c 10%2c 50%2c 9%2c 30%2c 2%2c 100%2c 5' stroke-dashoffset='0'/%3e%3c/svg%3e");
+            text-align: center;
+            /*overflow: hidden;*/
+        }
+        #fridge::before { content: "fridge" }
+        #oven::before { content: "oven" }
+        #cabinet::before { content: "cabinet" }
+        #plate::before {
+            content: "plate";
+            transform: translateX(-50%);
+        }
+
+        table, th, tr {
+            border-collapse: collapse;
+            border: 0.5px dashed var(--color);
+            padding: 0.5em;
+            font-weight: normal;
+        }
+
+        table {
+            width: 100%;
+            padding: 0;
+        }
+
+        .inv tr {
+            height: 1em !important;
+        }
+
+        #plate tr {
+            display: block;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            border-radius: 100%;
+        }
+        #plate th {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            padding: 0;
+            border: none;
+            pointer-events: none;
+        }
+        #plate th:last-child {
+            display: none;
+        }
+
+        .handwritten {
+            font-family: var(--handwritten);
+            line-height: 1.25em;
+        }
+
+        .draggable:hover {
+            cursor: pointer;
+            background-color: var(--highlight);
+        }
+
+        .dragging {
+            position: absolute;
+            transform: translate(-50%,-50%);
+            pointer-events: none;
+            border-radius: 50%;
+            border: 0.5px dashed var(--color);
+            text-align: center;
+            padding: 0.5em;
+        }
+
+        .dragging span {
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+        }
+
+        .droppable,
+        .droppable th {
+            transition: background-color 200ms;
+        }
+        .droppable.active {
+            background-color: var(--highlight);
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+
+        <h1>workshop</h1>
+
+        <div id="inventory">
+            <div id="fridge" class="box titled inv droppable">
+                <table>
+                    <tr>
+                        <th>item</th>
+                        <th width="30%">size</th>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="oven" class="box titled inv droppable">
+                <table>
+                    <tr>
+                        <th>item</th>
+                        <th width="30%">size</th>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="cabinet" class="box titled inv droppable">
+                <table>
+                    <tr>
+                        <th>item</th>
+                        <th width="30%">size</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="plate" class="box titled droppable">
+        </div>
+
+    </div>
+
+</body>
+
+<script type="text/javascript">
+    var game = {
+      workshop: {
+        fridge: [],
+        oven: [],
+        cabinet: [],
+        plate: []
+      }
+    };
+
+    var ui = {
+      fridge: document.getElementById("fridge").querySelector("table"),
+      oven: document.getElementById("oven").querySelector("table"),
+      cabinet: document.getElementById("cabinet").querySelector("table"),
+      plate: document.getElementById("plate"),
+    };
+
+    var ref = []; //objects of reference in fridge, plate, etc
+
+    var _mouseEl;
+    var _prevT;
+    var _prevPos = {x:null,y:null};
+</script>
+<script type="text/javascript" src="spirit.js"></script>
+<script type="text/javascript" src="ingredient.js"></script>
+<script type="text/javascript" src="potion.js"></script>
+<script type="text/javascript" src="main.js"></script>
+
+</html>
