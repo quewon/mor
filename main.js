@@ -41,6 +41,7 @@ window.onload = function() {
   }));
   ref.push(new Ingredient(bank.ingredients.nectarine));
   ref.push(new Ingredient(bank.ingredients.ariadne));
+  ref.push(new Ingredient(bank.ingredients.love));
 };
 
 var bank = {
@@ -76,12 +77,13 @@ var bank = {
     "ash": {
       name: "ash",
       type: "ash"
-    }
+    },
   },
 
   t: {
     "peach juice": ["water", "nectarine"],
     "ariadne soup": ["water", "ariadne"],
+    "muck": ["ash", "water"],
   },
 
   g: {
@@ -91,6 +93,9 @@ var bank = {
     "salad": ["vegetable", "fruit"],
     "fruits": ["fruit"],
     "vegetables": ["vegetable"],
+    "muck": ["ash", "fruit"],
+    "muck": ["ash", "vegetable"],
+    "muck": ["ash", "water"],
   },
 
   vendors: {

@@ -286,19 +286,6 @@ class Ingredient {
     i.update();
   }
 
-  update() {
-    this.updateName();
-
-    if (this.temperature >= config.limit) this.burn();
-
-    if (this.el) {
-      this.el.style.width = this.size+0.5+"em";
-      this.el.style.height = this.size+0.5+"em";
-      this.el.lastElementChild.textContent = this.size;
-      this.el.firstElementChild.textContent = this.name;
-    }
-  }
-
   updateName() {
     let keys = [];
     for (let name in this.densities) {
@@ -346,38 +333,55 @@ class Ingredient {
     }
   }
 
+  update() {
+    this.updateName();
+
+    if (this.temperature >= config.limit) this.burn();
+    if (this.freshness <= -1 * config.limit) this.rot();
+
+    if (this.el) {
+      this.el.style.width = this.size+0.5+"em";
+      this.el.style.height = this.size+0.5+"em";
+      this.el.lastElementChild.textContent = this.size;
+      this.el.firstElementChild.textContent = this.name;
+    }
+  }
+
   tick() {
 
     let container = this.container;
-    if (_mouseEl == this.el) {
-      container = "";
-    }
+    if (_mouseEl == this.el) container = "";
 
     switch (container) {
       case "fridge":
 
         this.temperature--;
 
-        if (this.temperature < -1 * config.limit/2) this.temperature = -1 * config.limit/2;
-
         break;
       case "oven":
 
         this.temperature++;
-
-        if (this.temperature > config.limit) this.temperature = config.limit;
 
         break;
       default:
 
         this.freshness--;
 
-        if (this.freshness < -1 * config.limit) this.freshness = -1 * config.limit;
-
         break;
     }
 
+    if (this.temperature < -1 * config.limit/2)
+      this.temperature = -1 * config.limit/2;
+    if (this.temperature > config.limit)
+      this.temperature = config.limit;
+    if (this.freshness < -1 * config.limit)
+      this.freshness = -1 * config.limit;
+
     this.update();
+  }
+
+  rot() {
+
   }
 
   burn() {
