@@ -29,29 +29,56 @@ window.onload = function() {
     size: 6
   }));
   ref.push(new Ingredient(bank.ingredients.water));
-  ref.push(new Ingredient(bank.ingredients.peach));
+  ref.push(new Ingredient(bank.ingredients.nectarine));
+  ref.push(new Ingredient(bank.ingredients.ariadne));
+  ref.push(new Ingredient(bank.ingredients.ariadne));
 };
 
 var bank = {
   ingredients: {
     "water": {
       name: "water",
+      type: "water",
     },
-    "seeker": {
-      name: "seeker",
+    "ariadne": {
+      name: "ariadne",
+      type: "vegetable",
     },
     "muck": {
       name: "muck",
+      type: "muck",
     },
-    "peach": {
-      name: "peach",
+    "nectarine": {
+      name: "nectarine",
+      type: "fruit",
+    },
+    "love": {
+      name: "love",
+      type: "essence",
+    },
+    "doom": {
+      name: "doom",
+      type: "essence",
+    },
+    "hate": {
+      name: "hate",
+      type: "essence",
     }
   },
 
-  t: [
-    ["water", "peach", "peach juice"],
-    ["water", "peach juice", "peach juice"]
-  ],
+  t: {
+    "peach juice": ["water", "nectarine"],
+    "ariadne soup": ["water", "ariadne"],
+  },
+
+  g: {
+    "soup": ["water", "vegetable"],
+    "juice": ["water", "fruit"],
+    "soup": ["water", "vegetable", "fruit"],
+    "salad": ["vegetable", "fruit"],
+    "fruits": ["fruit"],
+    "vegetables": ["vegetable"],
+  },
 
   vendors: {
     "dummy": {

@@ -272,34 +272,69 @@ class Ingredient {
   }
 
   mixIngredient(i) {
-    if (i.name != this.name) {
-      for (let index in bank.t) {
-        let t = bank.t[index];
-        if (
-          (i.name == t[0] && this.name == t[1]) ||
-          (i.name == t[1] && this.name == t[0])
-        ) {
-          this.name = t[2];
-        }
-      }
-    }
-
     this.size += i.size;
     for (let name in i.densities) {
       this.addDensityValue(name, i.densities[name])
     }
 
+    this.update();
+    i.update();
+
     this.el.style.width = this.size+0.5+"em";
     this.el.style.height = this.size+0.5+"em";
     this.el.firstElementChild.textContent = this.name;
     this.el.lastElementChild.textContent = this.size;
-
-    this.update();
-    i.update();
   }
 
   update() {
+    this.updateName()
+  }
 
+  updateName() {
+    let keys = [];
+    for (let name in this.densities) {
+      if (this.densities[name] > 0) keys.push(name);
+    }
+
+    if (keys.length == 1) {
+      this.name = keys[0];
+      return;
+    }
+
+    // check specific combo names
+    check: for (let name in bank.t) {
+      let array = bank.t[name];
+
+      if (array.length != keys.length) continue check;
+
+      for (let index in keys) {
+        if (!array.includes(keys[index])) continue check;
+      }
+
+      // keys and array contain the same values
+      this.name = name;
+      return;
+    }
+
+    // specific combo not found -- fall back on general combos
+    let types = [];
+    for (let i in keys) {
+      let name = keys[i];
+      types.push(bank.ingredients[name].type);
+    }
+    check: for (let name in bank.g) {
+      let array = bank.g[name];
+
+      if (array.length != types.length) continue check;
+
+      for (let index in types) {
+        if (!array.includes(types[index])) continue check;
+      }
+
+      // types and array contain the same values
+      this.name = name;
+      return;
+    }
   }
 
   tick() {
