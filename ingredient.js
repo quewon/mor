@@ -6,6 +6,13 @@ class Ingredient {
 
     this.freshness = props.freshness || 100;
 
+    if (!props.densities) {
+      this.densities = {};
+      this.addDensityValue(this.name, this.size);
+    } else {
+      this.densities = props.densities;
+    }
+
     this.move(props.container || "fridge");
   }
 
@@ -15,6 +22,15 @@ class Ingredient {
 
       let array = game.workshop[this.container];
       array.splice(array.indexOf(this.id), 1);
+    }
+  }
+
+  addDensityValue(name, value) {
+    if (!(name in this.densities)) this.densities[name] = 0;
+    this.densities[name] += value;
+
+    if (this.densities[name] < 0) {
+      this.densities[name] = 0;
     }
   }
 
@@ -130,7 +146,12 @@ class Ingredient {
 
       let i = ref[_mouseEl.dataset.id];
       console.log("added 1 to "+this.size);
-      this.size++;
+
+      let drop = new Ingredient(i);
+      drop.size = 1;
+      drop.removeEl();
+      this.mixIngredient(drop);
+
       this.el.style.width = this.size+0.5+"em";
       this.el.style.height = this.size+0.5+"em";
       this.el.lastElementChild.textContent = this.size;
@@ -155,6 +176,9 @@ class Ingredient {
     } else {
       let i = new Ingredient(this);
       i.size = Math.floor(i.size/2);
+      for (let name in i.densities) {
+        i.densities[name] /= 2;
+      }
       if (i.size != 0) {
         ref.push(i);
         i.move(this.container, null, null, this.id);
@@ -242,17 +266,40 @@ class Ingredient {
   mix(id) {
     let i = ref[id];
 
+    this.mixIngredient(i);
+
     console.log("mixed "+this.size+" and "+i.size);
+  }
+
+  mixIngredient(i) {
+    if (i.name != this.name) {
+      for (let index in bank.t) {
+        let t = bank.t[index];
+        if (
+          (i.name == t[0] && this.name == t[1]) ||
+          (i.name == t[1] && this.name == t[0])
+        ) {
+          this.name = t[2];
+        }
+      }
+    }
 
     this.size += i.size;
+    for (let name in i.densities) {
+      this.addDensityValue(name, i.densities[name])
+    }
+
     this.el.style.width = this.size+0.5+"em";
     this.el.style.height = this.size+0.5+"em";
+    this.el.firstElementChild.textContent = this.name;
     this.el.lastElementChild.textContent = this.size;
 
-    i.size = this.size;
-    i.el.style.width = this.el.style.width;
-    i.el.style.height = this.el.style.height;
-    i.el.lastElementChild.textContent = i.size;
+    this.update();
+    i.update();
+  }
+
+  update() {
+
   }
 
   tick() {

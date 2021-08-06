@@ -28,22 +28,30 @@ window.onload = function() {
     name: "water",
     size: 6
   }));
-  ref.push(new Ingredient({ name: "water" }));
-
+  ref.push(new Ingredient(bank.ingredients.water));
+  ref.push(new Ingredient(bank.ingredients.peach));
 };
 
 var bank = {
   ingredients: {
     "water": {
-      location: [],
+      name: "water",
     },
     "seeker": {
-      location: ["garden"],
+      name: "seeker",
     },
     "muck": {
-      location: [],
+      name: "muck",
+    },
+    "peach": {
+      name: "peach",
     }
   },
+
+  t: [
+    ["water", "peach", "peach juice"],
+    ["water", "peach juice", "peach juice"]
+  ],
 
   vendors: {
     "dummy": {
