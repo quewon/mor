@@ -22,6 +22,17 @@ window.onload = function() {
     e.preventDefault();
   });
 
+  setInterval(function() {
+
+    for (let i in ref) {
+      let r = ref[i];
+      if (r.el) {
+        r.tick();
+      }
+    }
+
+  }, config.tickSpeed);
+
   ref.push(new Spirit("you"));
   ref.push(new Spirit("dummy"));
   ref.push(new Ingredient({
@@ -61,6 +72,10 @@ var bank = {
     "hate": {
       name: "hate",
       type: "essence",
+    },
+    "ash": {
+      name: "ash",
+      type: "ash"
     }
   },
 

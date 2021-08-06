@@ -5,6 +5,7 @@ class Ingredient {
     this.size = props.size || 1;
 
     this.freshness = props.freshness || 100;
+    this.temperature = props.temperature || 0;
 
     this.densities = {};
     if (!props.densities) {
@@ -24,6 +25,8 @@ class Ingredient {
 
       let array = game.workshop[this.container];
       array.splice(array.indexOf(this.id), 1);
+
+      this.el = null;
     }
   }
 
@@ -139,7 +142,7 @@ class Ingredient {
       }, 1);
     }
 
-    // console.log("picked up "+this.size);
+    console.log("picked up "+this.name);
   }
 
   pickupHalf(e) {
@@ -160,7 +163,7 @@ class Ingredient {
 
       i.size--;
 
-      if (i.size < 1) {
+      if (i.size <= 0) {
         i.removeEl();
         _mouseEl = null;
         if (_prevT) _prevT.classList.remove("active");
@@ -237,7 +240,7 @@ class Ingredient {
         this.size--;
         this.el.style.width = this.size+0.5+"em";
         this.el.style.height = this.size+0.5+"em";
-        if (this.size < 1) {
+        if (this.size <= 0) {
           this.removeEl();
           document.onmouseup = null;
           _mouseEl = null;
@@ -281,15 +284,19 @@ class Ingredient {
 
     this.update();
     i.update();
-
-    this.el.style.width = this.size+0.5+"em";
-    this.el.style.height = this.size+0.5+"em";
-    this.el.firstElementChild.textContent = this.name;
-    this.el.lastElementChild.textContent = this.size;
   }
 
   update() {
-    this.updateName()
+    this.updateName();
+
+    if (this.temperature >= config.limit) this.burn();
+
+    if (this.el) {
+      this.el.style.width = this.size+0.5+"em";
+      this.el.style.height = this.size+0.5+"em";
+      this.el.lastElementChild.textContent = this.size;
+      this.el.firstElementChild.textContent = this.name;
+    }
   }
 
   updateName() {
@@ -340,6 +347,58 @@ class Ingredient {
   }
 
   tick() {
-    this.freshness--;
+
+    let container = this.container;
+    if (_mouseEl == this.el) {
+      container = "";
+    }
+
+    switch (container) {
+      case "fridge":
+
+        this.temperature--;
+
+        if (this.temperature < -1 * config.limit/2) this.temperature = -1 * config.limit/2;
+
+        break;
+      case "oven":
+
+        this.temperature++;
+
+        if (this.temperature > config.limit) this.temperature = config.limit;
+
+        break;
+      default:
+
+        this.freshness--;
+
+        if (this.freshness < -1 * config.limit) this.freshness = -1 * config.limit;
+
+        break;
+    }
+
+    this.update();
+  }
+
+  burn() {
+    this.name = "ash";
+
+    for (let name in this.densities) {
+      if (
+        bank.ingredients[name].type == "water" ||
+        bank.ingredients[name].type == "essence"
+      ) {
+        this.size -= this.densities[name];
+        bank.ingredients[name] = 0;
+      }
+    }
+
+    if (this.size <= 0) {
+      this.removeEl();
+      this.el = null;
+    }
+
+    this.densities = {};
+    this.addDensityValue("ash", this.size);
   }
 }
