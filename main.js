@@ -28,9 +28,7 @@ window.onload = function() {
     name: "water",
     size: 6
   }));
-  ref.push(new Ingredient(bank.ingredients.water));
   ref.push(new Ingredient(bank.ingredients.nectarine));
-  ref.push(new Ingredient(bank.ingredients.ariadne));
   ref.push(new Ingredient(bank.ingredients.ariadne));
 };
 

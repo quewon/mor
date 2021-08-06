@@ -6,11 +6,13 @@ class Ingredient {
 
     this.freshness = props.freshness || 100;
 
+    this.densities = {};
     if (!props.densities) {
-      this.densities = {};
       this.addDensityValue(this.name, this.size);
     } else {
-      this.densities = props.densities;
+      for (let name in props.densities) {
+        this.addDensityValue(name, props.densities[name]);
+      }
     }
 
     this.move(props.container || "fridge");
@@ -137,7 +139,7 @@ class Ingredient {
       }, 1);
     }
 
-    console.log("picked up "+this.size);
+    // console.log("picked up "+this.size);
   }
 
   pickupHalf(e) {
@@ -145,7 +147,7 @@ class Ingredient {
       document.onmouseup = null;
 
       let i = ref[_mouseEl.dataset.id];
-      console.log("added 1 to "+this.size);
+      // console.log("added 1 to "+this.size);
 
       let drop = new Ingredient(i);
       drop.size = 1;
@@ -216,7 +218,7 @@ class Ingredient {
         };
       }, 1);
 
-      console.log("picked up half of "+this.size);
+      // console.log("picked up half of "+this.size);
     }
   }
 
@@ -224,7 +226,7 @@ class Ingredient {
     if (e.which == 3) {
       let target = e.target;
       if (target.id in game.workshop) {
-        console.log("dropped 1");
+        // console.log("dropped 1");
 
         let i = new Ingredient(this);
         i.size = 1;
@@ -243,7 +245,7 @@ class Ingredient {
         }
       }
     } else {
-      console.log("dropped "+this.size);
+      // console.log("dropped "+this.size);
 
       let t = e.target;
       if (
@@ -268,7 +270,7 @@ class Ingredient {
 
     this.mixIngredient(i);
 
-    console.log("mixed "+this.size+" and "+i.size);
+    // console.log("mixed "+this.size+" and "+i.size);
   }
 
   mixIngredient(i) {
