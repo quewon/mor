@@ -139,9 +139,13 @@ class Ingredient {
 
     let i = 0;
     let children = this.bg_el.childNodes;
+    let light = 0;
     for (let name in this.densities) {
       children[i].className = bank.ingredients[name].type;
-      children[i].style.opacity = this.densities[name] / dtotal;
+      let opacity = this.densities[name] / dtotal;
+      opacity = opacity + opacity * light;
+      light += opacity;
+      children[i].style.opacity = opacity;
       i++;
     }
 
