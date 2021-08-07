@@ -16,6 +16,8 @@ class Ingredient {
       }
     }
 
+    this.potion = props.potion;
+
     this.move(props.container || "fridge");
   }
 
@@ -443,9 +445,10 @@ class Ingredient {
     check: for (let name in bank.g) {
       let array = bank.g[name];
 
-      if (array.length != types.length) continue check;
+      if (array.length < types.length) continue check;
 
       for (let index in types) {
+        console.log(array, types[index]);
         if (!array.includes(types[index])) continue check;
       }
 

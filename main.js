@@ -41,6 +41,8 @@ window.onload = function() {
 
   }, config.tickSpeed);
 
+  scene("workshop");
+
   ref.push(new Spirit("you"));
   ref.push(new Spirit("dummy"));
   ref.push(new Ingredient({
@@ -48,6 +50,7 @@ window.onload = function() {
     size: 6
   }));
   ref.push(new Ingredient(bank.ingredients.peach));
+  ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.love));
 };
@@ -88,19 +91,33 @@ var bank = {
     },
   },
 
+  potions: {
+    "unlabeled bottle": {
+      name: "unlabeled bottle",
+      potion: {
+        e: "",
+      }
+    }
+  },
+
+  // name combinations
   t: {
     "peach juice": ["water", "peach"],
     "breadwater": ["water", "crumbs"],
     "muck": ["ash", "water"],
   },
 
+  // type combinations
   g: {
     "soup": ["water", "vegetable"],
     "juice": ["water", "fruit"],
     "soup": ["water", "vegetable", "fruit"],
     "salad": ["vegetable", "fruit"],
-    "fruits": ["fruit"],
-    "vegetables": ["vegetable"],
+    "fruits": ["fruit", "fruit"],
+    "vegetables": ["vegetable", "vegetable"],
+    "muck": ["ash", "fruit"],
+    "muck": ["ash", "vegetable"],
+    "muck": ["ash", "water"],
   },
 
   vendors: {
@@ -125,3 +142,21 @@ var _repeating = [
   "888888888888",
   "999999999999"
 ];
+
+function scene(name) {
+  if (_scene == name) return;
+
+  if (_scene) {
+    ui[_scene].classList.remove("on");
+    ui[_scene+"_button"].classList.remove("selected");
+    ui[_scene].classList.remove("in");
+    ui[_scene].classList.add("out");
+  }
+
+  _scene = name;
+
+  ui[_scene].classList.remove("out");
+  ui[name].classList.add("on");
+  ui[name+"_button"].classList.add("selected");
+  ui[name].classList.add("in");
+}

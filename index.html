@@ -51,13 +51,27 @@
             padding-left: 3em;
             padding-right: 3em;
             transform: translateX(-50%);
-            animation: 1s linear infinite switch-font;
 
             width: var(--width);
             text-align: justify;
 
             mix-blend-mode: multiply;
         }
+
+        .scene {
+            display: none;
+        }
+
+        .scene.on {
+            display: block;
+        }
+
+        /*
+        i don't know how to fix this :
+        when you click on a button while it's on that scene
+        for some reason the animation stops working for that scene
+        or even just clicking off the window ?
+        */
 
         .box {
             position: relative;
@@ -78,20 +92,26 @@
         h1 {
             font-size: 1.5em;
             width: 100%;
-            /*cursor: default;*/
         }
 
-        #inventory {
+        .sidebar {
             float: left;
             width: calc(var(--width) / 3);
+        }
+
+        .content {
+            float: right;
+            width: calc(var(--width) * 2/3 - 1em);
         }
 
         .inv {
             margin-bottom: 1em;
         }
+        .inv tr:first-child {
+            cursor: default;
+        }
 
         #plate {
-            float: right;
             width: calc(var(--width) * 2/3 - 1em);
             height: calc(var(--width) * 2/3 - 1em);
             border-radius: 50%;
@@ -187,6 +207,7 @@
         }
         .droppable.active {
             background-color: var(--highlight);
+            cursor: pointer;
         }
 
         .bg {
@@ -208,43 +229,172 @@
         .vegetable { background-image: url("textures/yellow.jpg") }
         .e { background-image: url("textures/green.jpg") }
         .ash { background-image: url("textures/black.jpg") }
+
+        /*.water { background: blue }
+        .fruit { background: pink }
+        .vegetable { background: green }
+        .e { background: yellow }
+        .ash { background: black }*/
+
+        .menudivider {
+            opacity: 0.1;
+        }
+        .menubutton {
+            color: white;
+            text-shadow: -1px 0 var(--color), 0 1px var(--color), 1px 0 var(--color), 0 -1px var(--color);
+            cursor: pointer;
+            transition: text-shadow 200ms, color 200ms;
+            margin-right: 0.5em;
+        }
+        .menubutton:hover {
+            text-shadow: -1px 0 var(--highlight), 0 1px var(--highlight), 1px 0 var(--highlight), 0 -1px var(--highlight);
+        }
+        .menubutton.selected {
+            color: var(--color);
+            text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+        }
+        .selected:hover {
+            cursor: default;
+        }
+
+        #inventory::before { content:"inventory" }
+
+        .dialogue {
+            display: block;
+            float: left;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .portrait img {
+            background: white;
+            width: 100%;
+            height: 8em;
+            display: block;
+            object-fit: scale-down;
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+        }
+        .portrait {
+            background: rgba(255,255,255,0.5);
+            width: 7em;
+            font-family: var(--handwritten);
+            margin-right: 1em;
+            border: 0.5px dashed var(--color);
+            border-bottom: none;
+            float: left;
+        }
+        .portrait span {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            border-top: 0.5px dashed var(--color);
+            border-bottom: 0.5px dashed var(--color);
+        }
+
+        .dialogue.right .portrait {
+            float: right;
+        }
+        .dialogue.right .portrait img {
+            -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+        }
+        .dialogue.right p {
+            float: right;
+            margin-right: 1em;
+        }
+
+        /*
+        #lobby .content {
+            background: rgba(255,255,255,1);
+            z-index: 0;
+        }
+        */
     </style>
 </head>
 <body>
     <div id="container">
 
-        <h1>workshop</h1>
+        <h1>
+            <span class="menubutton" onclick="scene('workshop')">workshop</span>
+            <span class="menubutton" onclick="scene('lobby')">lobby</span>
+        </h1>
 
-        <div id="inventory">
-            <div id="fridge" class="box titled inv droppable">
-                <table>
-                    <tr>
-                        <th>item</th>
-                        <th width="30%">size</th>
-                    </tr>
-                </table>
+        <div id="workshop" class="scene">
+            
+            <div class="sidebar">
+                <div id="fridge" class="box titled inv droppable">
+                    <table>
+                        <tr>
+                            <th>item</th>
+                            <th width="30%">size</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="oven" class="box titled inv droppable">
+                    <table>
+                        <tr>
+                            <th>item</th>
+                            <th width="30%">size</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="cabinet" class="box titled inv droppable">
+                    <table>
+                        <tr>
+                            <th>item</th>
+                            <th width="30%">size</th>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
-            <div id="oven" class="box titled inv droppable">
-                <table>
-                    <tr>
-                        <th>item</th>
-                        <th width="30%">size</th>
-                    </tr>
-                </table>
+            <div class="content">
+                <div id="plate" class="box titled droppable">
+                </div>
             </div>
 
-            <div id="cabinet" class="box titled inv droppable">
-                <table>
-                    <tr>
-                        <th>item</th>
-                        <th width="30%">size</th>
-                    </tr>
-                </table>
-            </div>
         </div>
 
-        <div id="plate" class="box titled droppable">
+        <div id="lobby" class="scene">
+
+            <div class="sidebar">
+                <div id="inventory" class="box titled inv droppable">
+                    <table>
+                        <tr>
+                            <th>item</th>
+                            <th width="30%">size</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="dialogue">
+                    <div class="portrait">
+                        <img src="faces/elf.png">
+                        <span>dumb intern</span>
+                    </div>
+
+                    <p>... and i said, not in <i>my</i> coffee! oh, hey boss. did you need anything?</p>
+                </div>
+
+                <div class="dialogue right">
+                    <div class="portrait">
+                        <img src="faces/elf.png">
+                        <span>you</span>
+                    </div>
+
+                    <p style="float:right">lol what</p>
+                </div>
+            </div>
+            
         </div>
 
     </div>
@@ -258,11 +408,16 @@
         oven: [],
         cabinet: [],
         plate: []
-      }
+      },
+
     };
 
     var ui = {
         container: document.getElementById("container"),
+        workshop: document.getElementById("workshop"),
+        lobby: document.getElementById("lobby"),
+        workshop_button: document.querySelector("h1").children[0],
+        lobby_button: document.querySelector("h1").children[1],
         fridge: document.getElementById("fridge").querySelector("table"),
         oven: document.getElementById("oven").querySelector("table"),
         cabinet: document.getElementById("cabinet").querySelector("table"),
@@ -274,6 +429,7 @@
     var _mouseEl;
     var _prevT;
     var _prevPos = {x:null,y:null};
+    var _scene;
 
     var config = {
         limit: 100,
