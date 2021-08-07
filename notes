@@ -1,6 +1,5 @@
 to do
 [ ] combination system that works
-[ ] bug: split water creates ash
 [x] bgs reflect content with overlap & opacity
 [ ] potions + activation (experimentation)
 [ ] interns
@@ -9,6 +8,22 @@ to do
 
 [ ] when placing on plate while scrolled the position is messed up
 
+[?] numbers that go on forever sometimes result in inaccurate sizes
+    eg. "2" becomes "1.99"
+    how to recreate this bug:
+      add up 6 water, 1 peach, 1 crumbs, and 1 love.
+      split it once.
+      split the thing you just split once more.
+      put them all in the oven, and then add them up when they're ash.
+
+    if i could check for numbers like this in normalizeDensities()...
+
+    is my solution (_repeating) going to bite me in the ass i hope not
+
+
+composition
+freshness
+temperature
 
 
 spirit

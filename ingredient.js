@@ -64,7 +64,8 @@ class Ingredient {
     el.appendChild(name);
 
     let sum_th = document.createElement("th");
-    sum_th.textContent = this.size;
+    let size = Math.round(this.size * 100) / 100;
+    sum_th.textContent = size;
     el.appendChild(sum_th);
 
     el.addEventListener("mouseup", function(e) {
@@ -122,12 +123,9 @@ class Ingredient {
   updateBg() {
     if (!this.bg_el) return;
 
-    let dtotal = 0;
-    let names = 0;
-    for (let name in this.densities) {
-      names++;
-      dtotal += this.densities[name];
-    }
+    this.normalizeDensities();
+
+    let names = Object.keys(this.densities).length;
 
     while (this.bg_el.childNodes.length != names) {
       let l = this.bg_el.childNodes.length;
@@ -144,10 +142,10 @@ class Ingredient {
     // let light = 0;
     for (let name in this.densities) {
       children[i].className = bank.ingredients[name].type;
-      let opacity = this.densities[name] / dtotal;
-      // opacity = opacity + opacity * light;
-      // light += this.densities[name] / dtotal;
+      let opacity = this.densities[name];
+      // opacity = opacity * opacity + light;
       children[i].style.opacity = opacity;
+      // light += opacity;
       i++;
     }
 
@@ -234,7 +232,8 @@ class Ingredient {
 
       this.el.style.width = this.size+0.5+"em";
       this.el.style.height = this.size+0.5+"em";
-      this.el.lastElementChild.textContent = this.size;
+      let size = Math.floor(this.size * 100) / 100;
+      this.el.lastElementChild.textContent = size;
 
       i.size--;
 
@@ -361,18 +360,52 @@ class Ingredient {
     let i = ref[id];
 
     this.mixIngredient(i);
-
-    // console.log("mixed "+this.size+" and "+i.size);
   }
 
   mixIngredient(i) {
-    this.size += i.size;
+    // mix temperature
+
+    let temp = 0;
+    let sum = this.size + i.size;
+    temp += this.size * this.temperature;
+    temp += i.size * i.temperature;
+    temp /= sum;
+    this.temperature = temp;
+
+    // mix freshness
+
+    let f = 0;
+    f += this.size * this.freshness;
+    f += i.size * i.freshness;
+    f /= sum;
+    this.freshness = f;
+
+    // combine densities
+
+    this.normalizeDensities();
+    i.normalizeDensities();
+
     for (let name in i.densities) {
-      this.addDensityValue(name, i.densities[name])
+      this.addDensityValue(name, i.densities[name] * i.size/this.size);
     }
+
+    this.size = sum;
 
     this.update();
     i.update();
+  }
+
+  normalizeDensities() {
+    let dtotal = 0;
+
+    for (let name in this.densities) {
+      dtotal += this.densities[name];
+    }
+
+    for (let name in this.densities) {
+      let d = this.densities[name] / dtotal;
+      this.densities[name] = d;
+    }
   }
 
   updateName() {
@@ -429,7 +462,8 @@ class Ingredient {
     if (this.el) {
       this.el.style.width = this.size+0.5+"em";
       this.el.style.height = this.size+0.5+"em";
-      this.el.lastElementChild.textContent = this.size;
+      let size = Math.floor(this.size * 100) / 100;
+      this.el.lastElementChild.textContent = size;
       this.el.firstElementChild.textContent = this.name;
     }
 
@@ -481,10 +515,7 @@ class Ingredient {
   burn() {
     this.name = "ash";
 
-    let dtotal = 0;
-    for (let name in this.densities) {
-      dtotal += this.densities[name];
-    }
+    this.normalizeDensities();
 
     let size = this.size;
     for (let name in this.densities) {
@@ -492,8 +523,18 @@ class Ingredient {
         bank.ingredients[name].type == "water" ||
         bank.ingredients[name].type == "e"
       ) {
-        this.size -= this.densities[name] / dtotal * size;
+        this.size -= this.densities[name] * size;
         this.densities[name] = 0;
+      }
+    }
+
+    let string = this.size.toString();
+    if (string.length > _repeating[0].length) {
+      for (let i in _repeating) {
+        if (string.includes(_repeating[i])) {
+          this.size = Math.round((parseFloat(string) + Number.EPSILON) * 1000) / 1000;
+          break;
+        }
       }
     }
 

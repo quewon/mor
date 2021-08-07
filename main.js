@@ -48,19 +48,12 @@ window.onload = function() {
     size: 6
   }));
   ref.push(new Ingredient(bank.ingredients.peach));
-  ref.push(new Ingredient(bank.ingredients.peach));
   ref.push(new Ingredient(bank.ingredients.crumbs));
-  ref.push(new Ingredient(bank.ingredients.crumbs));
-  ref.push(new Ingredient(bank.ingredients.love));
-  ref.push(new Ingredient(bank.ingredients.love));
-  ref.push(new Ingredient(bank.ingredients.love));
-  ref.push(new Ingredient(bank.ingredients.love));
-  ref.push(new Ingredient(bank.ingredients.love));
   ref.push(new Ingredient(bank.ingredients.love));
 };
 
 var bank = {
-  ingredients: {
+  ingredients: { // the atoms of this game
     "water": {
       name: "water",
       type: "water",
@@ -108,7 +101,6 @@ var bank = {
     "salad": ["vegetable", "fruit"],
     "fruits": ["fruit"],
     "vegetables": ["vegetable"],
-    "muck": ["ash", "fruit"],
   },
 
   vendors: {
@@ -119,3 +111,17 @@ var bank = {
     }
   },
 };
+
+// lol
+var _repeating = [
+  "000000000000",
+  "111111111111",
+  "222222222222",
+  "333333333333",
+  "444444444444",
+  "555555555555",
+  "666666666666",
+  "777777777777",
+  "888888888888",
+  "999999999999"
+];
