@@ -10,7 +10,7 @@
         :root {
             --bg: #fff;
             --color: #2e231b;
-            --highlight: #cbd5f5;
+            --highlight: rgba(78, 172, 186,0.3);
 
             --handwritten: 'La Belle Aurore', cursive;
             --serif: 'Averia Serif Libre', serif;
@@ -36,7 +36,7 @@
             -webkit-font-smoothing: none;
             font-family: var(--serif);
             font-size: 20px;
-            background: url("paper.jpg");
+            background: url("textures/paper.jpg");
             background-size: 70%;
             margin: 0;
             color: var(--color);
@@ -114,6 +114,7 @@
         }
 
         table {
+            position: relative;
             width: 100%;
             padding: 0;
         }
@@ -127,6 +128,7 @@
             position: absolute;
             transform: translate(-50%,-50%);
             border-radius: 100%;
+            border: none;
         }
         #plate th {
             position: absolute;
@@ -146,6 +148,13 @@
             line-height: 1.25em;
         }
 
+        .draggable, .dragging {
+            color: white;
+        }
+        .inv .draggable {
+            color: var(--color);
+        }
+
         .draggable:hover {
             cursor: pointer;
             background-color: var(--highlight);
@@ -156,7 +165,7 @@
             transform: translate(-50%,-50%);
             pointer-events: none;
             border-radius: 50%;
-            border: 0.5px dashed var(--color);
+            /*border: 0.5px dashed var(--color);*/
             text-align: center;
             padding: 0.5em;
         }
@@ -175,6 +184,25 @@
         .droppable.active {
             background-color: var(--highlight);
         }
+
+        .bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .bg div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+        }
+
+        .water { background-image: url("textures/blue.jpg") }
+        .fruit { background-image: url("textures/peach.jpg") }
+        .vegetable { background-image: url("textures/yellow.jpg") }
+        .e { background-image: url("textures/green.jpg") }
+        .ash { background-image: url("textures/black.jpg") }
     </style>
 </head>
 <body>
@@ -229,10 +257,11 @@
     };
 
     var ui = {
-      fridge: document.getElementById("fridge").querySelector("table"),
-      oven: document.getElementById("oven").querySelector("table"),
-      cabinet: document.getElementById("cabinet").querySelector("table"),
-      plate: document.getElementById("plate"),
+        container: document.getElementById("container"),
+        fridge: document.getElementById("fridge").querySelector("table"),
+        oven: document.getElementById("oven").querySelector("table"),
+        cabinet: document.getElementById("cabinet").querySelector("table"),
+        plate: document.getElementById("plate"),
     };
 
     var ref = []; //objects of reference in fridge, plate, etc

@@ -27,6 +27,11 @@ class Ingredient {
       array.splice(array.indexOf(this.id), 1);
 
       this.el = null;
+
+      if (this.bg_el) {
+        this.bg_el.remove();
+        this.bg_el = null;
+      }
     }
   }
 
@@ -97,7 +102,61 @@ class Ingredient {
     game.workshop[container].push(this.id);
     this.container = container;
 
+    // bg
+
+    let bg = document.createElement("span");
+    bg.className = "bg";
+
+    bg.style.borderRadius = getComputedStyle(el).getPropertyValue("border-radius");
+    ui.container.appendChild(bg);
+
     this.el = el;
+    this.bg_el = bg;
+
+    for (let i in ref) {
+      let r = ref[i];
+      if (r.bg_el) r.updateBg();
+    }
+  }
+
+  updateBg() {
+    let dtotal = 0;
+    let names = 0;
+    for (let name in this.densities) {
+      names++;
+      dtotal += this.densities[name];
+    }
+
+    while (this.bg_el.childNodes.length != names) {
+      let l = this.bg_el.childNodes.length;
+      if (l < names) {
+        let layer = document.createElement("div");
+        this.bg_el.appendChild(layer);
+      } else if (l > names) {
+        this.bg_el.lastElementChild.remove();
+      }
+    }
+
+    let i = 0;
+    let children = this.bg_el.childNodes;
+    for (let name in this.densities) {
+      children[i].className = bank.ingredients[name].type;
+      children[i].style.opacity = this.densities[name] / dtotal;
+      i++;
+    }
+
+    if (this.el.parentNode.tagName == "TABLE") {
+      this.bg_el.style.display = "none";
+    }
+
+    this.bg_el.style.width = this.el.offsetWidth+"px";
+    this.bg_el.style.height = this.el.offsetHeight+"px";
+
+    let elbox = this.el.getBoundingClientRect();
+    let cbox = ui.container.getBoundingClientRect();
+
+    this.bg_el.style.top = elbox.top-cbox.top+"px";
+    this.bg_el.style.left = elbox.left-cbox.left+"px";
   }
 
   pickup(e) {
@@ -123,6 +182,13 @@ class Ingredient {
       name.textContent = this.name;
       el.appendChild(name);
       document.body.appendChild(el);
+
+      let bg = document.createElement("span");
+      bg.className = "bg";
+      bg.style.borderRadius = getComputedStyle(el).getPropertyValue("border-radius");
+      ui.container.appendChild(bg);
+
+      this.bg_el = bg;
       this.el = el;
 
       let x = e.pageX;
@@ -142,7 +208,10 @@ class Ingredient {
       }, 1);
     }
 
-    console.log("picked up "+this.name);
+    for (let i in ref) {
+      let r = ref[i];
+      if (r.bg_el) r.updateBg();
+    }
   }
 
   pickupHalf(e) {
@@ -203,6 +272,13 @@ class Ingredient {
       name.textContent = this.name;
       el.appendChild(name);
       document.body.appendChild(el);
+
+      let bg = document.createElement("span");
+      bg.className = "bg";
+      bg.style.borderRadius = getComputedStyle(el).getPropertyValue("border-radius");
+      ui.container.appendChild(bg);
+
+      this.bg_el = bg;
       this.el = el;
 
       let x = e.pageX;
@@ -222,6 +298,11 @@ class Ingredient {
       }, 1);
 
       // console.log("picked up half of "+this.size);
+    }
+
+    for (let i in ref) {
+      let r = ref[i];
+      if (r.bg_el) r.updateBg();
     }
   }
 
@@ -334,8 +415,6 @@ class Ingredient {
   }
 
   update() {
-    this.updateName();
-
     if (this.temperature >= config.limit) this.burn();
     if (this.freshness <= -1 * config.limit) this.rot();
 
@@ -345,10 +424,11 @@ class Ingredient {
       this.el.lastElementChild.textContent = this.size;
       this.el.firstElementChild.textContent = this.name;
     }
+
+    this.updateName();
   }
 
   tick() {
-
     let container = this.container;
     if (_mouseEl == this.el) container = "";
 
@@ -390,7 +470,7 @@ class Ingredient {
     for (let name in this.densities) {
       if (
         bank.ingredients[name].type == "water" ||
-        bank.ingredients[name].type == "essence"
+        bank.ingredients[name].type == "e"
       ) {
         this.size -= this.densities[name];
         bank.ingredients[name] = 0;
@@ -404,5 +484,7 @@ class Ingredient {
 
     this.densities = {};
     this.addDensityValue("ash", this.size);
+
+    this.updateBg();
   }
 }

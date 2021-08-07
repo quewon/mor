@@ -16,6 +16,14 @@ window.onload = function() {
       t.classList.add("active");
       _prevT = t;
     }
+
+    let bg = ref[_mouseEl.dataset.id].bg_el;
+    if (bg) {
+      let box = _mouseEl.getBoundingClientRect();
+      let cbox = ui.container.getBoundingClientRect();
+      bg.style.left = box.left-cbox.left+"px";
+      bg.style.top = box.top-cbox.top+"px";
+    }
   });
 
   document.addEventListener("contextmenu", function(e) {
@@ -39,8 +47,8 @@ window.onload = function() {
     name: "water",
     size: 6
   }));
-  ref.push(new Ingredient(bank.ingredients.nectarine));
-  ref.push(new Ingredient(bank.ingredients.ariadne));
+  ref.push(new Ingredient(bank.ingredients.peach));
+  ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.love));
 };
 
@@ -50,29 +58,29 @@ var bank = {
       name: "water",
       type: "water",
     },
-    "ariadne": {
-      name: "ariadne",
+    "crumbs": {
+      name: "crumbs",
       type: "vegetable",
     },
     "muck": {
       name: "muck",
       type: "muck",
     },
-    "nectarine": {
-      name: "nectarine",
+    "peach": {
+      name: "peach",
       type: "fruit",
     },
     "love": {
       name: "love",
-      type: "essence",
+      type: "e",
     },
     "doom": {
       name: "doom",
-      type: "essence",
+      type: "e",
     },
     "hate": {
       name: "hate",
-      type: "essence",
+      type: "e",
     },
     "ash": {
       name: "ash",
@@ -81,8 +89,8 @@ var bank = {
   },
 
   t: {
-    "peach juice": ["water", "nectarine"],
-    "ariadne soup": ["water", "ariadne"],
+    "peach juice": ["water", "peach"],
+    "breadwater": ["water", "crumbs"],
     "muck": ["ash", "water"],
   },
 
@@ -94,8 +102,6 @@ var bank = {
     "fruits": ["fruit"],
     "vegetables": ["vegetable"],
     "muck": ["ash", "fruit"],
-    "muck": ["ash", "vegetable"],
-    "muck": ["ash", "water"],
   },
 
   vendors: {

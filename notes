@@ -1,3 +1,14 @@
+to do
+[ ] combination system that works
+[ ] bug: split water creates ash
+[ ] bgs reflect content with overlap & opacity
+[ ] potions + activation (experimentation)
+[ ] interns
+  interns that steal soup
+  intro: dead intern in ur room
+
+
+
 spirit
 - death -> ghost
 - true death -> essence
@@ -9,7 +20,11 @@ depends on the nature of the death
 
 LOVE : birth/creation (+)
 DOOM : destruction/death (-)
-HATE : change/manipulation
+HATE : change/manipulation (o)
+
+consuming (+) will heal you
+consuming (-) will hurt you
+consuming (o) will 
 
 
 
