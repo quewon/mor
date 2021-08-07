@@ -1,11 +1,13 @@
 to do
 [ ] combination system that works
 [ ] bug: split water creates ash
-[ ] bgs reflect content with overlap & opacity
+[x] bgs reflect content with overlap & opacity
 [ ] potions + activation (experimentation)
 [ ] interns
   interns that steal soup
   intro: dead intern in ur room
+
+[ ] when placing on plate while scrolled the position is messed up
 
 
 

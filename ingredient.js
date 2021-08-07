@@ -120,6 +120,8 @@ class Ingredient {
   }
 
   updateBg() {
+    if (!this.bg_el) return;
+
     let dtotal = 0;
     let names = 0;
     for (let name in this.densities) {
@@ -331,6 +333,8 @@ class Ingredient {
           _mouseEl = null;
           if (_prevT) _prevT.classList.remove("active");
         }
+
+        this.updateBg();
       }
     } else {
       // console.log("dropped "+this.size);
@@ -449,6 +453,12 @@ class Ingredient {
         break;
       default:
 
+        if (this.temperature > 0) {
+          this.temperature -= 0.5;
+        } else if (this.temperature < 0) {
+          this.temperature += 0.5;
+        }
+
         this.freshness--;
 
         break;
@@ -471,13 +481,19 @@ class Ingredient {
   burn() {
     this.name = "ash";
 
+    let dtotal = 0;
+    for (let name in this.densities) {
+      dtotal += this.densities[name];
+    }
+
+    let size = this.size;
     for (let name in this.densities) {
       if (
         bank.ingredients[name].type == "water" ||
         bank.ingredients[name].type == "e"
       ) {
-        this.size -= this.densities[name];
-        bank.ingredients[name] = 0;
+        this.size -= this.densities[name] / dtotal * size;
+        this.densities[name] = 0;
       }
     }
 

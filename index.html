@@ -48,6 +48,8 @@
             position: absolute;
             left: 50%;
             top: 10%;
+            padding-left: 3em;
+            padding-right: 3em;
             transform: translateX(-50%);
             animation: 1s linear infinite switch-font;
 
@@ -128,7 +130,6 @@
             position: absolute;
             transform: translate(-50%,-50%);
             border-radius: 100%;
-            border: none;
         }
         #plate th {
             position: absolute;
@@ -165,9 +166,12 @@
             transform: translate(-50%,-50%);
             pointer-events: none;
             border-radius: 50%;
-            /*border: 0.5px dashed var(--color);*/
             text-align: center;
             padding: 0.5em;
+            border: 0.5px dashed var(--color);
+        }
+        #plate tr {
+            /*border: none;*/
         }
 
         .dragging span {

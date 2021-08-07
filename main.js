@@ -52,6 +52,11 @@ window.onload = function() {
   ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.love));
+  ref.push(new Ingredient(bank.ingredients.love));
+  ref.push(new Ingredient(bank.ingredients.love));
+  ref.push(new Ingredient(bank.ingredients.love));
+  ref.push(new Ingredient(bank.ingredients.love));
+  ref.push(new Ingredient(bank.ingredients.love));
 };
 
 var bank = {
