@@ -48,6 +48,8 @@ window.onload = function() {
     size: 6
   }));
   ref.push(new Ingredient(bank.ingredients.peach));
+  ref.push(new Ingredient(bank.ingredients.peach));
+  ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.love));
 };
