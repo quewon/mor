@@ -19,7 +19,7 @@
             --light-color: #2e231b;
             --light-bg: url("textures/paper.jpg");
             --light-bg-underlay: #fff;
-            --light-highlight: rgba(78, 172, 186,0.3);
+            --light-highlight: rgba(78, 172, 186, 0.3);
             --light-blend-mode: multiply;
             --light-box-bg: unset;
             --light-box-border: none;
@@ -28,8 +28,8 @@
             --dark-bg: url("textures/black.jpg");
             --dark-color: #aaaab0;
             --dark-bg-underlay: black;
-            --dark-highlight: #67a192;
-            --dark-blend-mode: lighten;
+            --dark-highlight: rgba(107, 236, 255, 0.3);
+            --dark-blend-mode: screen;
             --dark-box-bg: none !important;
             --dark-box-border: 1px solid var(--color);
             --dark-half-underlay: rgba(23, 23, 23,0.5);
@@ -609,7 +609,7 @@
                 <h2 style="text-align:right">settings</h2>
 
                 <div style="float:right">
-                    <div class="li_buttons">
+                    <div id="settings_handwriting" class="li_buttons">
                         handwriting...
                         <br><span class="tab"></span>
                         <button onclick="css('--handwritten', 'var(--cursive)', this)" class="selected" style="font-family:var(--cursive)">
@@ -620,7 +620,7 @@
                             2b pencil
                         </button>
                     </div>
-                    <div>
+                    <div id="settings_fontSize">
                         text size...
                         <br>
                         <span class="tab"></span>
@@ -628,7 +628,7 @@
                         <button onclick="css('--font-size', '17px', this)" class="selected" style="font-size:17px">Aa</button>
                         <button onclick="css('--font-size', '20px', this)" style="font-size:20px">Aa</button>
                     </div>
-                    <div class="li_buttons">
+                    <div id="settings_theme" class="li_buttons">
                         theme...
                         <br><span class="tab"></span>
                         <button onclick="setTheme('light', this)" class="selected">
@@ -695,6 +695,12 @@
         tickSpeed: 10,
         dragEl: false, //things that you pick up drag behind
         snappyDrop: true,
+
+        defaultSettings: {
+            handwriting: 0,
+            fontSize: 0,
+            theme: 0,
+        }
     }
 </script>
 <script type="text/javascript" src="spirit.js"></script>

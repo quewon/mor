@@ -1,5 +1,17 @@
 window.onload = function() {
 
+  // settings
+
+  for (let s in config.defaultSettings) {
+    let el = document.getElementById("settings_"+s);
+
+    console.log(el);
+
+    el.getElementsByTagName("button")[config.defaultSettings[s]].click();
+  }
+
+  //
+
   setInterval(function() {
     if (!mouse.el || !config.dragEl) return;
 
