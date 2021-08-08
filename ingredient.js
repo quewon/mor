@@ -16,7 +16,7 @@ class Ingredient {
       }
     }
 
-    this.potion = props.potion;
+    this.potion = props.potion || {};
 
     this.move(props.container || "fridge");
   }
@@ -33,6 +33,11 @@ class Ingredient {
       if (this.bg_el) {
         this.bg_el.remove();
         this.bg_el = null;
+      }
+
+      if (this.potion.prompt) {
+        this.potion.prompt.remove();
+        this.potion.prompt = null;
       }
     }
   }
@@ -77,7 +82,7 @@ class Ingredient {
         case 1: //lmb
 
           let el = i.el;
-          _prevPos = {
+          mouse.prev = {
             x: parseInt(el.style.left),
             y: parseInt(el.style.top)
           };
@@ -166,16 +171,16 @@ class Ingredient {
   }
 
   pickup(e) {
-    if (_mouseEl) {
-      let r = ref[_mouseEl.dataset.id];
+    if (mouse.el) {
+      let r = ref[mouse.el.dataset.id];
 
       this.mix(r.id);
 
       r.removeEl();
 
-      _mouseEl = null;
+      mouse.el = null;
       document.onmouseup = null;
-      if (_prevT) _prevT.classList.remove("active");
+      if (mouse.target) mouse.target.classList.remove("active");
     } else {
       this.removeEl();
 
@@ -199,16 +204,18 @@ class Ingredient {
 
       let x = e.pageX;
       let y = e.pageY;
+      mouse.x = x;
+      mouse.y = y;
 
       this.el.classList.add("dragging");
       this.el.style.left = x+"px";
       this.el.style.top = y+"px";
 
-      _mouseEl = this.el;
+      mouse.el = this.el;
       
       setTimeout(function(e) {
         document.onmouseup = function(e) {
-          let i = ref[_mouseEl.dataset.id];
+          let i = ref[mouse.el.dataset.id];
           i.drop(e);
         };
       }, 1);
@@ -221,10 +228,10 @@ class Ingredient {
   }
 
   pickupHalf(e) {
-    if (_mouseEl) {
+    if (mouse.el) {
       document.onmouseup = null;
 
-      let i = ref[_mouseEl.dataset.id];
+      let i = ref[mouse.el.dataset.id];
       // console.log("added 1 to "+this.size);
 
       let drop = new Ingredient(i);
@@ -241,15 +248,15 @@ class Ingredient {
 
       if (i.size <= 0) {
         i.removeEl();
-        _mouseEl = null;
-        if (_prevT) _prevT.classList.remove("active");
+        mouse.el = null;
+        if (mouse.target) mouse.target.classList.remove("active");
       } else {
         i.el.style.width = i.size+0.5+"em";
         i.el.style.height = i.size+0.5+"em";
 
         setTimeout(function(e) {
           document.onmouseup = function(e) {
-            let i = ref[_mouseEl.dataset.id];
+            let i = ref[mouse.el.dataset.id];
             i.drop(e);
           };
         }, 1);
@@ -290,16 +297,18 @@ class Ingredient {
 
       let x = e.pageX;
       let y = e.pageY;
+      mouse.x = x;
+      mouse.y = y;
 
       this.el.classList.add("dragging");
       this.el.style.left = x+"px";
       this.el.style.top = y+"px";
 
-      _mouseEl = this.el;
+      mouse.el = this.el;
       
       setTimeout(function(e) {
         document.onmouseup = function(e) {
-          let i = ref[_mouseEl.dataset.id];
+          let i = ref[mouse.el.dataset.id];
           i.drop(e);
         };
       }, 1);
@@ -331,8 +340,8 @@ class Ingredient {
         if (this.size <= 0) {
           this.removeEl();
           document.onmouseup = null;
-          _mouseEl = null;
-          if (_prevT) _prevT.classList.remove("active");
+          mouse.el = null;
+          if (mouse.target) mouse.target.classList.remove("active");
         }
 
         this.updateBg();
@@ -346,15 +355,20 @@ class Ingredient {
         !t.classList.contains("draggable")
       ) {
         let box = t.getBoundingClientRect();
-        this.move(t.id, e.pageX - box.left, e.pageY - box.top);
+        if (config.snappyDrop) {
+          this.move(t.id, e.pageX - box.left, e.pageY - box.top);
+        } else {
+          let ebox = this.el.getBoundingClientRect();
+          this.move(t.id, ebox.left + ebox.width/2 - box.left, ebox.top + ebox.height/2 - box.top);
+        }
       } else {
-        this.move(this.container, _prevPos.x, _prevPos.y);
+        this.move(this.container, mouse.prev.x, mouse.prev.y);
       }
 
       document.onmouseup = null;
 
-      _mouseEl = null;
-      if (_prevT) _prevT.classList.remove("active");
+      mouse.el = null;
+      if (mouse.target) mouse.target.classList.remove("active");
     }
   }
 
@@ -391,6 +405,15 @@ class Ingredient {
       this.addDensityValue(name, i.densities[name] * i.size/this.size);
     }
 
+    // potion labels
+
+    if (!this.potion.label && i.potion.label) {
+      this.potion.label = i.potion.label;
+    } else if (this.potion.label && i.potion.label) {
+      this.potion.label = null;
+      this.potion.prompt = null;
+    }
+
     this.size = sum;
 
     this.update();
@@ -410,7 +433,67 @@ class Ingredient {
     }
   }
 
+  isPotion() {
+    let containsNotE = false;
+    let containsE = false;
+    for (let name in this.densities) {
+      if (bank.ingredients[name].type == "e") {
+        containsE = true;
+      } else {
+        containsNotE = true;
+      }
+    }
+
+    // not a potion if it only contains e
+    // not a potion if it only contains not e
+
+    if (containsE && containsNotE) return true
+
+    return false
+  }
+
+  prompt(p, value) {
+    let div = document.createElement("div");
+    div.className = "prompt box";
+    div.dataset.id = this.id;
+    let textarea = document.createElement("input");
+    textarea.type = "text";
+    textarea.placeholder = p || value || "";
+
+    div.addEventListener("keyup", function(e) {
+      if (e.key == "Enter") {
+        let r = ref[this.dataset.id];
+        let input = this.lastElementChild.value;
+
+        if (input.trim() == "") {
+          input = "unlabeled";
+        }
+
+        r.potion.label = input;
+        r.potion.prompt.remove();
+        r.potion.prompt = null;
+      }
+    });
+
+    div.appendChild(textarea);
+
+    ui[_scene].appendChild(div);
+    textarea.focus();
+
+    this.potion.prompt = div;
+  }
+
   updateName() {
+    if (this.isPotion()) {
+      if (!this.potion.label && !this.potion.prompt) {
+        this.prompt("you label the bottle...", "unlabeled");
+      } else {
+        this.potion.label = this.potion.label || "unlabeled";
+      }
+      this.name = this.potion.label;
+      return;
+    }
+
     let keys = [];
     for (let name in this.densities) {
       if (this.densities[name] > 0) keys.push(name);
@@ -475,7 +558,7 @@ class Ingredient {
 
   tick() {
     let container = this.container;
-    if (_mouseEl == this.el) container = "";
+    if (mouse.el == this.el) container = "";
 
     switch (container) {
       case "fridge":

@@ -6,7 +6,7 @@ to do
   interns that steal soup
   intro: dead intern in ur room
 
-[ ] when placing on plate while scrolled the position is messed up
+[ ] when placing on plate while scrolled the position gets messed up
 
 [?] numbers that go on forever sometimes result in inaccurate sizes
     eg. "2" becomes "1.99"

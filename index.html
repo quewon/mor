@@ -35,7 +35,7 @@
             font-smooth: never;
             -webkit-font-smoothing: none;
             font-family: var(--serif);
-            font-size: 20px;
+            font-size: 17px;
             background: url("textures/paper.jpg");
             background-size: 70%;
             margin: 0;
@@ -48,6 +48,7 @@
             position: absolute;
             left: 50%;
             top: 10%;
+            height: 80%;
             padding-left: 3em;
             padding-right: 3em;
             transform: translateX(-50%);
@@ -143,6 +144,7 @@
 
         .inv tr {
             height: 1em !important;
+            word-break: break-word;
         }
 
         #plate tr {
@@ -189,7 +191,20 @@
             text-align: center;
             padding: 0.5em;
             border: 0.5px dashed var(--color);
+            /*animation: pickup 300ms;*/
         }
+        @keyframes pickup {
+            0% {
+                transform: translate(-50%,-50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%,-50%) scale(1.2);
+            }
+            100% {
+                transform: translate(-50%,-50%) scale(1);
+            }
+        }
+
         #plate tr {
             /*border: none;*/
         }
@@ -235,6 +250,29 @@
         .vegetable { background: green }
         .e { background: yellow }
         .ash { background: black }*/
+
+        input {
+            /*font-family: var(--handwritten);*/
+            font-family: inherit;
+            font-size: inherit;
+            border: none;
+            border-bottom: 0.5px dashed var(--color);
+            transition: border 200ms;
+        }
+
+        input:focus{
+            outline: none;
+            border-color: var(--highlight);
+        }
+
+        .prompt {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            background-color: white;
+            transform: translate(-50%,-50%);
+            font-style: italic;
+        }
 
         .menudivider {
             opacity: 0.1;
@@ -426,14 +464,20 @@
 
     var ref = []; //objects of reference in fridge, plate, etc
 
-    var _mouseEl;
-    var _prevT;
-    var _prevPos = {x:null,y:null};
+    var mouse = {
+        x: null,
+        y: null,
+        el: null,
+        target: null,
+        prev: { x:null, y:null }
+    }
     var _scene;
 
     var config = {
         limit: 100,
         tickSpeed: 10,
+        dragEl: false, //things that you pick up drag behind
+        snappyDrop: true,
     }
 </script>
 <script type="text/javascript" src="spirit.js"></script>

@@ -1,28 +1,52 @@
 window.onload = function() {
 
-  document.addEventListener("mousemove", function(e) {
-    if (!_mouseEl) return;
+  setInterval(function() {
+    if (!mouse.el || !config.dragEl) return;
 
-    let x = e.pageX;
-    let y = e.pageY;
-    _mouseEl.style.left = x+"px";
-    _mouseEl.style.top = y+"px";
+    let posx = mouse.el.offsetLeft;
+    let posy = mouse.el.offsetTop;
+    let x = posx + 0.1 * (mouse.x - posx);
+    let y = posy + 0.1 * (mouse.y - posy);
 
-    let t = e.target;
-    if (_prevT != t && _prevT) {
-      _prevT.classList.remove("active");
-    }
-    if (t.classList.contains("droppable")) {
-      t.classList.add("active");
-      _prevT = t;
-    }
+    mouse.el.style.left = x+"px";
+    mouse.el.style.top = y+"px";
 
-    let bg = ref[_mouseEl.dataset.id].bg_el;
+    let bg = ref[mouse.el.dataset.id].bg_el;
     if (bg) {
-      let box = _mouseEl.getBoundingClientRect();
+      let box = mouse.el.getBoundingClientRect();
       let cbox = ui.container.getBoundingClientRect();
       bg.style.left = box.left-cbox.left+"px";
       bg.style.top = box.top-cbox.top+"px";
+    }
+  }, 10);
+
+  document.addEventListener("mousemove", function(e) {
+    if (!mouse.el) return;
+
+    mouse.x = e.pageX;
+    mouse.y = e.pageY;
+
+    let t = e.target;
+    if (mouse.target != t && mouse.target) {
+      mouse.target.classList.remove("active");
+    }
+    if (t.classList.contains("droppable")) {
+      t.classList.add("active");
+      mouse.target = t;
+    }
+
+    if (!config.dragEl) {
+      mouse.el.style.left = mouse.x+"px";
+      mouse.el.style.top = mouse.y+"px";
+
+      let bg = ref[mouse.el.dataset.id].bg_el;
+      if (bg) {
+        let box = mouse.el.getBoundingClientRect();
+        let cbox = ui.container.getBoundingClientRect();
+        bg.style.left = box.left-cbox.left+"px";
+        bg.style.top = box.top-cbox.top+"px";
+      }
+      return;
     }
   });
 
@@ -52,6 +76,7 @@ window.onload = function() {
   ref.push(new Ingredient(bank.ingredients.peach));
   ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.crumbs));
+  ref.push(new Ingredient(bank.ingredients.love));
   ref.push(new Ingredient(bank.ingredients.love));
 };
 
@@ -159,4 +184,7 @@ function scene(name) {
   ui[name].classList.add("on");
   ui[name+"_button"].classList.add("selected");
   ui[name].classList.add("in");
+
+  mouse.el = null;
+  mouse.prev = { x:null,y:null };
 }
