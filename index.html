@@ -5,17 +5,33 @@
     <title>mor</title>
     <style type="text/css">
         @import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+        /* the nicest cursive on google fonts  */
         @import url('https://fonts.googleapis.com/css2?family=La+Belle+Aurore&display=swap');
+
+        /* very legible but too cute  */
+        @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+
+        /* kiddy handwriting  */
+        @import url('https://fonts.googleapis.com/css2?family=Schoolbell&display=swap');
 
         :root {
             --bg: #fff;
             --color: #2e231b;
             --highlight: rgba(78, 172, 186,0.3);
 
-            --handwritten: 'La Belle Aurore', cursive;
+            --cursive: 'La Belle Aurore', cursive;
+            --print: 'Schoolbell', sans-serif;
+
+            --handwritten: var(--cursive);
             --serif: 'Averia Serif Libre', serif;
 
             --width: 700px;
+            --font-size: 17px;
+        }
+
+        *::selection {
+            background-color: var(--highlight);
         }
 
         body {
@@ -35,7 +51,7 @@
             font-smooth: never;
             -webkit-font-smoothing: none;
             font-family: var(--serif);
-            font-size: 17px;
+            font-size: var(--font-size);
             background: url("textures/paper.jpg");
             background-size: 70%;
             margin: 0;
@@ -90,10 +106,16 @@
             padding-right: 0.5em;
         }
 
+        h1, h2 {
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: var(--font-size);
+        }
         h1 {
             font-size: 1.5em;
-            width: 100%;
+            margin-bottom: 1em;
         }
+        h2 { font-size: 1.3em }
 
         .sidebar {
             float: left;
@@ -131,7 +153,7 @@
 
         table, th, tr {
             border-collapse: collapse;
-            border: 0.5px dashed var(--color);
+            border: 1px dashed var(--color);
             padding: 0.5em;
             font-weight: normal;
         }
@@ -144,7 +166,7 @@
 
         .inv tr {
             height: 1em !important;
-            word-break: break-word;
+            word-break: break-all;
         }
 
         #plate tr {
@@ -190,7 +212,7 @@
             border-radius: 50%;
             text-align: center;
             padding: 0.5em;
-            border: 0.5px dashed var(--color);
+            border: 1px dashed var(--color);
             /*animation: pickup 300ms;*/
         }
         @keyframes pickup {
@@ -256,13 +278,36 @@
             font-family: inherit;
             font-size: inherit;
             border: none;
-            border-bottom: 0.5px dashed var(--color);
+            border-bottom: 1px dashed var(--color);
             transition: border 200ms;
         }
 
-        input:focus{
+        .textarea {
+            display: inline-block;
+            font-family: inherit;
+            font-size: inherit;
+            border: none;
+            resize: none;
+            width: 100%;
+            max-height: 15em;
+            word-break: normal;
+            cursor: text;
+            overflow: scroll;
+
+            padding-left: 1em;
+            border-left: 1px dashed var(--color);
+
+            transition: border 200ms;
+        }
+
+        .textarea:focus, input:focus{
             outline: none;
             border-color: var(--highlight);
+        }
+
+        [contenteditable] {
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         .prompt {
@@ -304,8 +349,13 @@
             margin-bottom: 1em;
         }
 
+        div {
+            margin-bottom: 1em;
+        }
+
         p {
             margin: 0;
+            margin-bottom: 1em;
         }
 
         .portrait img {
@@ -322,28 +372,29 @@
             width: 7em;
             font-family: var(--handwritten);
             margin-right: 1em;
-            border: 0.5px dashed var(--color);
+            border: 1px dashed var(--color);
             border-bottom: none;
             float: left;
+            margin-bottom: 1em;
         }
         .portrait span {
             display: inline-block;
             width: 100%;
             text-align: center;
-            border-top: 0.5px dashed var(--color);
-            border-bottom: 0.5px dashed var(--color);
+            border-top: 1px dashed var(--color);
+            border-bottom: 1px dashed var(--color);
         }
 
-        .dialogue.right .portrait {
+        .right .portrait {
             float: right;
+            margin-left: 1em;
         }
-        .dialogue.right .portrait img {
+        .right .portrait img {
             -webkit-transform: scaleX(1);
             transform: scaleX(1);
         }
-        .dialogue.right p {
+        .right p {
             float: right;
-            margin-right: 1em;
         }
 
         /*
@@ -352,6 +403,48 @@
             z-index: 0;
         }
         */
+
+        .tab {
+            display: inline-block;
+            width: 2em;
+        }
+
+        button {
+            position: relative;
+            background: none;
+            font-size: var(--font-size);
+            font-family: inherit;
+            border: none;
+            padding: 0;
+            transition: color 200ms;
+            line-height: var(--font-size);
+        }
+        button:hover {
+            color: var(--highlight);
+            cursor: pointer;
+        }
+
+        button.selected::before {
+            position: absolute;
+            content: "";
+            background-color: var(--highlight);
+            width: 0.5em;
+            height: 0.5em;
+            border-radius: 50%;
+            top: 1.1em;
+            left: 50%;
+            transform: translate(-50%,0);
+        }
+        .li_buttons button.selected::before {
+            border-radius: 50%;
+            top: 50%;
+            left: -0.9em;
+            transform: translate(0,-50%);
+        }
+        button.selected:hover {
+            color: var(--color);
+            cursor: default;
+        }
     </style>
 </head>
 <body>
@@ -360,6 +453,8 @@
         <h1>
             <span class="menubutton" onclick="scene('workshop')">workshop</span>
             <span class="menubutton" onclick="scene('lobby')">lobby</span>
+            <!-- settings, player stats, log -->
+            <span style="float:right" class="menubutton" onclick="scene('log')">you</span>
         </h1>
 
         <div id="workshop" class="scene">
@@ -435,6 +530,77 @@
             
         </div>
 
+        <div id="log" class="scene">
+
+            <div class="sidebar">
+                <div id="inventory" class="box titled inv droppable">
+                    <table>
+                        <tr>
+                            <th>item</th>
+                            <th width="30%">size</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="right">
+                    <div class="portrait">
+                        <img src="faces/elf.png">
+                        <span>you</span>
+                    </div>
+
+                    <!-- <h2>status</h2> -->
+
+                    <table style="width:auto">
+                        <tr>
+                            <th width="50%">health</th>
+                            <th>healthy</th>
+                        </tr>
+                        <tr>
+                            <th>what your interns think of you</th>
+                            <th>boring</th>
+                        </tr>
+                        <tr>
+                            <th>what the guild thinks of you</th>
+                            <th>stupid</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div>
+                    <h2>log</h2>
+
+                    <div style="margin:0" class="textarea" spellcheck="false" contenteditable="true">to do list numero uno</div>
+                </div>
+
+                <h2 style="text-align:right">settings</h2>
+
+                <div style="float:right">
+                    <div class="li_buttons">
+                        handwriting...
+                        <br><span class="tab"></span>
+                        <button onclick="css('--handwritten', 'var(--cursive)', this)" class="selected" style="font-family:var(--cursive)">
+                            ballpoint pen
+                        </button>
+                        <br><span class="tab"></span>
+                        <button onclick="css('--handwritten', 'var(--print)', this)" style="font-family:var(--print)">
+                            2b pencil
+                        </button>
+                    </div>
+                    <div>
+                        text size...
+                        <br>
+                        <span class="tab"></span>
+                        <button onclick="css('--font-size', '15px', this)" style="font-size:15px">Aa</button>
+                        <button onclick="css('--font-size', '17px', this)" class="selected" style="font-size:17px">Aa</button>
+                        <button onclick="css('--font-size', '20px', this)" style="font-size:20px">Aa</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
     </div>
 
 </body>
@@ -451,11 +617,14 @@
     };
 
     var ui = {
+        root: document.documentElement,
         container: document.getElementById("container"),
         workshop: document.getElementById("workshop"),
         lobby: document.getElementById("lobby"),
+        log: document.getElementById("log"),
         workshop_button: document.querySelector("h1").children[0],
         lobby_button: document.querySelector("h1").children[1],
+        log_button: document.querySelector("h1").children[2],
         fridge: document.getElementById("fridge").querySelector("table"),
         oven: document.getElementById("oven").querySelector("table"),
         cabinet: document.getElementById("cabinet").querySelector("table"),

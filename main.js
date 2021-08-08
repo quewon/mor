@@ -76,8 +76,10 @@ window.onload = function() {
   ref.push(new Ingredient(bank.ingredients.peach));
   ref.push(new Ingredient(bank.ingredients.crumbs));
   ref.push(new Ingredient(bank.ingredients.crumbs));
-  ref.push(new Ingredient(bank.ingredients.love));
-  ref.push(new Ingredient(bank.ingredients.love));
+  ref.push(new Ingredient({
+    name: "love",
+    size: 2
+  }));
 };
 
 var bank = {
@@ -187,4 +189,16 @@ function scene(name) {
 
   mouse.el = null;
   mouse.prev = { x:null,y:null };
+}
+
+function css(variable, value, el) {
+  let siblings = el.parentNode.getElementsByTagName("button");
+  for (let i=0; i<siblings.length; i++) {
+    let sib = siblings[i];
+    sib.classList.remove("selected");
+  }
+
+  el.classList.add("selected");
+
+  ui.root.style.setProperty(variable, value);
 }
