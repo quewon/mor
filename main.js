@@ -143,7 +143,6 @@ var bank = {
   t: {
     "peach juice": ["water", "peach"],
     "breadwater": ["water", "crumbs"],
-    "muck": ["ash", "water"],
   },
 
   // type combinations

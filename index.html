@@ -17,7 +17,7 @@
 
         :root {
             --light-color: #2e231b;
-            --light-bg: url("textures/paper.jpg");
+            --light-bg: url("textures/paper.jpg") center/80%;
             --light-bg-underlay: #fff;
             --light-highlight: rgba(78, 172, 186, 0.3);
             --light-blend-mode: multiply;
@@ -25,7 +25,7 @@
             --light-box-border: none;
             --light-half-underlay: rgba(255,255,255,0.5);
 
-            --dark-bg: url("textures/black.jpg");
+            --dark-bg: url("textures/black.jpg") center/30%;
             --dark-color: #aaaab0;
             --dark-bg-underlay: black;
             --dark-highlight: rgba(107, 236, 255, 0.3);
@@ -78,7 +78,6 @@
             font-family: var(--serif);
             font-size: var(--font-size);
             background: var(--light-bg);
-            background-size: 70%;
             margin: 0;
             color: var(--color);
 
@@ -425,7 +424,7 @@
             transform: scaleX(1);
         }
         .right p {
-            float: right;
+            text-align: right;
         }
 
         /*
@@ -556,7 +555,7 @@
                         <span>you</span>
                     </div>
 
-                    <p style="float:right">lol what</p>
+                    <p>i'm going to get rid of this water cooler.</p>
                 </div>
             </div>
             
@@ -632,11 +631,11 @@
                         theme...
                         <br><span class="tab"></span>
                         <button onclick="setTheme('light', this)" class="selected">
-                            paper light
+                            paper white
                         </button>
                         <br><span class="tab"></span>
                         <button onclick="setTheme('dark', this)">
-                            dark brown
+                            ash and muck
                         </button>
                     </div>
                 </div>
