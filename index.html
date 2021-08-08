@@ -100,10 +100,16 @@
 
         .scene {
             display: none;
+            float: right;
+            width: calc(var(--width) * 2/3 - 1em);
         }
 
-        .scene.on {
+        .on {
             display: block;
+        }
+
+        .hidden {
+            display: none;
         }
 
         /*
@@ -145,11 +151,6 @@
         .sidebar {
             float: left;
             width: calc(var(--width) / 3);
-        }
-
-        .content {
-            float: right;
-            width: calc(var(--width) * 2/3 - 1em);
         }
 
         .inv {
@@ -219,8 +220,9 @@
         }
 
         .draggable, .dragging {
-            color: var(--light-bg-underlay);
+            color: var(--bg-underlay);
         }
+
         .inv .draggable {
             color: var(--color);
         }
@@ -321,6 +323,7 @@
 
             padding-left: 1em;
             border-left: 1px dashed var(--color);
+            box-sizing: border-box;
 
             transition: border 200ms;
         }
@@ -376,7 +379,7 @@
             display: block;
             float: left;
             width: 100%;
-            margin-bottom: 1em;
+            margin-bottom: 0;
         }
 
         div {
@@ -418,6 +421,7 @@
         .right .portrait {
             float: right;
             margin-left: 1em;
+            margin-right: 0;
         }
         .right .portrait img {
             -webkit-transform: scaleX(1);
@@ -488,9 +492,17 @@
             <span style="float:right" class="menubutton" onclick="scene('log')">profile</span>
         </h1>
 
-        <div id="workshop" class="scene">
-            
-            <div class="sidebar">
+        <div class="sidebar">
+            <div id="inventory" class="box titled inv droppable">
+                <table>
+                    <tr>
+                        <th>item</th>
+                        <th width="30%">size</th>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="workshop_inventory">
                 <div id="fridge" class="box titled inv droppable">
                     <table>
                         <tr>
@@ -518,126 +530,101 @@
                     </table>
                 </div>
             </div>
+        </div>
 
-            <div class="content">
-                <div id="plate" class="box titled droppable">
-                </div>
+        <div id="workshop" class="scene">
+
+            <div id="plate" class="box titled droppable">
             </div>
 
         </div>
 
         <div id="lobby" class="scene">
 
-            <div class="sidebar">
-                <div id="inventory" class="box titled inv droppable">
-                    <table>
-                        <tr>
-                            <th>item</th>
-                            <th width="30%">size</th>
-                        </tr>
-                    </table>
+            <div class="dialogue">
+                <div class="portrait">
+                    <img src="faces/elf.png">
+                    <span>dumb intern</span>
                 </div>
+
+                <p>... and i said, not in <i>my</i> coffee! oh, hey boss. did you need anything?</p>
             </div>
 
-            <div class="content">
-                <div class="dialogue">
-                    <div class="portrait">
-                        <img src="faces/elf.png">
-                        <span>dumb intern</span>
-                    </div>
-
-                    <p>... and i said, not in <i>my</i> coffee! oh, hey boss. did you need anything?</p>
+            <div class="dialogue right">
+                <div class="portrait">
+                    <img src="faces/elf.png">
+                    <span>you</span>
                 </div>
 
-                <div class="dialogue right">
-                    <div class="portrait">
-                        <img src="faces/elf.png">
-                        <span>you</span>
-                    </div>
-
-                    <p>i'm going to get rid of this water cooler.</p>
-                </div>
+                <p>i'm going to get rid of this water cooler.</p>
             </div>
             
         </div>
 
         <div id="log" class="scene">
 
-            <div class="sidebar">
-                <div id="inventory" class="box titled inv droppable">
-                    <table>
-                        <tr>
-                            <th>item</th>
-                            <th width="30%">size</th>
-                        </tr>
-                    </table>
+            <div class="right">
+                <div class="portrait">
+                    <img src="faces/elf.png">
+                    <span>you</span>
                 </div>
+
+                <!-- <h2>status</h2> -->
+
+                <table style="width:auto">
+                    <tr>
+                        <th>health</th>
+                        <th width="30%">healthy</th>
+                    </tr>
+                    <tr>
+                        <th>what your interns think of you</th>
+                        <th>boring</th>
+                    </tr>
+                    <tr>
+                        <th>what the institute thinks of you</th>
+                        <th>stupid</th>
+                    </tr>
+                </table>
             </div>
 
-            <div class="content">
-                <div class="right">
-                    <div class="portrait">
-                        <img src="faces/elf.png">
-                        <span>you</span>
-                    </div>
+            <div>
+                <h2>log</h2>
 
-                    <!-- <h2>status</h2> -->
+                <div style="margin:0" class="textarea" spellcheck="false" contenteditable="true">to do list numero uno</div>
+            </div>
 
-                    <table style="width:auto">
-                        <tr>
-                            <th width="50%">health</th>
-                            <th>healthy</th>
-                        </tr>
-                        <tr>
-                            <th>what your interns think of you</th>
-                            <th>boring</th>
-                        </tr>
-                        <tr>
-                            <th>what the institute thinks of you</th>
-                            <th>stupid</th>
-                        </tr>
-                    </table>
+            <h2 style="text-align:right">settings</h2>
+
+            <div style="float:right">
+                <div id="settings_handwriting" class="li_buttons">
+                    handwriting...
+                    <br><span class="tab"></span>
+                    <button onclick="css('--handwritten', 'var(--cursive)', this)" class="selected" style="font-family:var(--cursive)">
+                        ballpoint pen
+                    </button>
+                    <br><span class="tab"></span>
+                    <button onclick="css('--handwritten', 'var(--print)', this)" style="font-family:var(--print)">
+                        2b pencil
+                    </button>
                 </div>
-
-                <div>
-                    <h2>log</h2>
-
-                    <div style="margin:0" class="textarea" spellcheck="false" contenteditable="true">to do list numero uno</div>
+                <div id="settings_fontSize">
+                    text size...
+                    <br>
+                    <span class="tab"></span>
+                    <button onclick="css('--font-size', '15px', this)" style="font-size:15px">Aa</button>
+                    <button onclick="css('--font-size', '17px', this)" class="selected" style="font-size:17px">Aa</button>
+                    <button onclick="css('--font-size', '20px', this)" style="font-size:20px">Aa</button>
                 </div>
-
-                <h2 style="text-align:right">settings</h2>
-
-                <div style="float:right">
-                    <div id="settings_handwriting" class="li_buttons">
-                        handwriting...
-                        <br><span class="tab"></span>
-                        <button onclick="css('--handwritten', 'var(--cursive)', this)" class="selected" style="font-family:var(--cursive)">
-                            ballpoint pen
-                        </button>
-                        <br><span class="tab"></span>
-                        <button onclick="css('--handwritten', 'var(--print)', this)" style="font-family:var(--print)">
-                            2b pencil
-                        </button>
-                    </div>
-                    <div id="settings_fontSize">
-                        text size...
-                        <br>
-                        <span class="tab"></span>
-                        <button onclick="css('--font-size', '15px', this)" style="font-size:15px">Aa</button>
-                        <button onclick="css('--font-size', '17px', this)" class="selected" style="font-size:17px">Aa</button>
-                        <button onclick="css('--font-size', '20px', this)" style="font-size:20px">Aa</button>
-                    </div>
-                    <div id="settings_theme" class="li_buttons">
-                        theme...
-                        <br><span class="tab"></span>
-                        <button onclick="setTheme('light', this)" class="selected">
-                            paper white
-                        </button>
-                        <br><span class="tab"></span>
-                        <button onclick="setTheme('dark', this)">
-                            ash and muck
-                        </button>
-                    </div>
+                <div id="settings_theme" class="li_buttons">
+                    theme...
+                    <br><span class="tab"></span>
+                    <button onclick="setTheme('light', this)" class="selected">
+                        paper white
+                    </button>
+                    <br><span class="tab"></span>
+                    <button onclick="setTheme('dark', this)">
+                        ash and muck
+                    </button>
                 </div>
             </div>
             
@@ -649,9 +636,8 @@
 
 <script type="text/javascript">
     var game = {
-        inventory: [],
-
-        workshop: {
+        storage: {
+            inventory: [],
             fridge: [],
             oven: [],
             cabinet: [],
@@ -667,6 +653,8 @@
         root: document.documentElement,
         container: document.getElementById("container"),
         workshop: document.getElementById("workshop"),
+        workshop_inventory: document.getElementById("workshop_inventory"),
+        inventory: document.getElementById("inventory").querySelector("table"),
         lobby: document.getElementById("lobby"),
         log: document.getElementById("log"),
         workshop_button: document.querySelector("h1").children[0],
@@ -704,6 +692,7 @@
 </script>
 <script type="text/javascript" src="spirit.js"></script>
 <script type="text/javascript" src="ingredient.js"></script>
+<script type="text/javascript" src="bank.js"></script>
 <script type="text/javascript" src="main.js"></script>
 
 </html>

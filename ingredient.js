@@ -25,7 +25,7 @@ class Ingredient {
     if (this.el) {
       this.el.remove();
 
-      let array = game.workshop[this.container];
+      let array = game.storage[this.container];
       array.splice(array.indexOf(this.id), 1);
 
       this.el = null;
@@ -107,7 +107,7 @@ class Ingredient {
     } else {
       ui[container].appendChild(el);
     }
-    game.workshop[container].push(this.id);
+    game.storage[container].push(this.id);
     this.container = container;
 
     // bg
@@ -160,14 +160,20 @@ class Ingredient {
       this.bg_el.style.display = "none";
     }
 
-    let elbox = this.el.getBoundingClientRect();
-    let cbox = ui.container.getBoundingClientRect();
+    this.bg_el.style.width = "calc("+this.el.style.width+" + 1em + 1px)";
+    this.bg_el.style.height = "calc("+this.el.style.height+" + 1em + 1px)";
 
-    this.bg_el.style.width = elbox.width+"px";
-    this.bg_el.style.height = elbox.height+"px";
+    if (this.el.offsetWidth > 0) {
+      let box = this.el.getBoundingClientRect();
+      let cbox = ui.container.getBoundingClientRect();
+      this.elValues = {
+        left: box.left-cbox.left+"px",
+        top: box.top-cbox.top+"px",
+      };
+    }
 
-    this.bg_el.style.top = elbox.top-cbox.top+"px";
-    this.bg_el.style.left = elbox.left-cbox.left+"px";
+    this.bg_el.style.top = this.elValues.top;
+    this.bg_el.style.left = this.elValues.left;
   }
 
   pickup(e) {
@@ -325,7 +331,7 @@ class Ingredient {
   drop(e) {
     if (e.which == 3) {
       let target = e.target;
-      if (target.id in game.workshop) {
+      if (target.id in game.storage) {
         // console.log("dropped 1");
 
         let i = new Ingredient(this);

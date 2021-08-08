@@ -4,9 +4,6 @@ window.onload = function() {
 
   for (let s in config.defaultSettings) {
     let el = document.getElementById("settings_"+s);
-
-    console.log(el);
-
     el.getElementsByTagName("button")[config.defaultSettings[s]].click();
   }
 
@@ -51,12 +48,19 @@ window.onload = function() {
       mouse.el.style.left = mouse.x+"px";
       mouse.el.style.top = mouse.y+"px";
 
-      let bg = ref[mouse.el.dataset.id].bg_el;
+      let r = ref[mouse.el.dataset.id];
+
+      let box = mouse.el.getBoundingClientRect();
+      let cbox = ui.container.getBoundingClientRect();
+      r.elValues = {
+        left: box.left-cbox.left+"px",
+        top: box.top-cbox.top+"px",
+      };
+
+      let bg = r.bg_el;
       if (bg) {
-        let box = mouse.el.getBoundingClientRect();
-        let cbox = ui.container.getBoundingClientRect();
-        bg.style.left = box.left-cbox.left+"px";
-        bg.style.top = box.top-cbox.top+"px";
+        bg.style.left = r.elValues.left;
+        bg.style.top = r.elValues.top;
       }
       return;
     }
@@ -94,79 +98,6 @@ window.onload = function() {
   }));
 };
 
-var bank = {
-  ingredients: { // the atoms of this game
-    "water": {
-      name: "water",
-      type: "water",
-    },
-    "crumbs": {
-      name: "crumbs",
-      type: "vegetable",
-    },
-    "muck": {
-      name: "muck",
-      type: "muck",
-    },
-    "peach": {
-      name: "peach",
-      type: "fruit",
-    },
-    "love": {
-      name: "love",
-      type: "e",
-    },
-    "doom": {
-      name: "doom",
-      type: "e",
-    },
-    "hate": {
-      name: "hate",
-      type: "e",
-    },
-    "ash": {
-      name: "ash",
-      type: "ash"
-    },
-  },
-
-  potions: {
-    "unlabeled bottle": {
-      name: "unlabeled bottle",
-      potion: {
-        e: "",
-      }
-    }
-  },
-
-  // name combinations
-  t: {
-    "peach juice": ["water", "peach"],
-    "breadwater": ["water", "crumbs"],
-  },
-
-  // type combinations
-  g: {
-    "soup": ["water", "vegetable"],
-    "juice": ["water", "fruit"],
-    "soup": ["water", "vegetable", "fruit"],
-    "salad": ["vegetable", "fruit"],
-    "fruits": ["fruit", "fruit"],
-    "vegetables": ["vegetable", "vegetable"],
-    "muck": ["ash", "fruit"],
-    "muck": ["ash", "vegetable"],
-    "muck": ["ash", "water"],
-  },
-
-  vendors: {
-    "dummy": {
-      spirit: 1,
-      selling: [],
-      location: ["market"],
-    }
-  },
-};
-
 // lol
 var _repeating = [
   "000000000000",
@@ -202,10 +133,13 @@ function scene(name) {
   mouse.prev = { x:null,y:null };
 
   if (_scene == "workshop") {
+    ui.workshop_inventory.classList.remove("hidden");
     for (let i in ref) {
       let r = ref[i];
       if (r.bg_el) r.updateBg();
     }
+  } else {
+    ui.workshop_inventory.classList.add("hidden");
   }
 }
 
