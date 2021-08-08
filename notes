@@ -6,8 +6,6 @@ to do
   interns that steal soup
   intro: dead intern in ur room
 
-[ ] when placing on plate while scrolled the position gets messed up
-
 [?] numbers that go on forever sometimes result in inaccurate sizes
     eg. "2" becomes "1.99"
     how to recreate this bug:
@@ -19,6 +17,8 @@ to do
     if i could check for numbers like this in normalizeDensities()...
 
     is my solution (_repeating) going to bite me in the ass i hope not
+
+[x] when placing on plate while scrolled the position gets messed up
 
 
 composition

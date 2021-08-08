@@ -13,7 +13,7 @@ class Spirit {
     this.reputation = 0;
 
     // buffs, debuffs
-    this.traits = [];
+    this.fx = [];
   }
 
   applyTrait() {

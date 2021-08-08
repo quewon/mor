@@ -16,6 +16,11 @@ class Ingredient {
       }
     }
 
+    this.elValues = {
+      left: "0px",
+      top: "0px",
+    };
+
     this.potion = props.potion || {};
 
     this.move(props.container || "fridge");
@@ -160,8 +165,8 @@ class Ingredient {
       this.bg_el.style.display = "none";
     }
 
-    this.bg_el.style.width = "calc("+this.el.style.width+" + 1em + 1px)";
-    this.bg_el.style.height = "calc("+this.el.style.height+" + 1em + 1px)";
+    this.bg_el.style.width = "calc("+this.el.style.width+" + 1em + 2px)";
+    this.bg_el.style.height = "calc("+this.el.style.height+" + 1em + 2px)";
 
     if (this.el.offsetWidth > 0) {
       let box = this.el.getBoundingClientRect();
@@ -362,10 +367,10 @@ class Ingredient {
       ) {
         let box = t.getBoundingClientRect();
         if (config.snappyDrop) {
-          this.move(t.id, e.pageX - box.left, e.pageY - box.top);
+          this.move(t.id, e.pageX - box.left - window.scrollX, e.pageY - box.top - window.scrollY);
         } else {
           let ebox = this.el.getBoundingClientRect();
-          this.move(t.id, ebox.left + ebox.width/2 - box.left, ebox.top + ebox.height/2 - box.top);
+          this.move(t.id, ebox.left + ebox.width/2 - box.left - window.scrollX, ebox.top + ebox.height/2 - box.top - window.scrollY);
         }
       } else {
         this.move(this.container, mouse.prev.x, mouse.prev.y);
@@ -413,11 +418,13 @@ class Ingredient {
 
     // potion labels
 
-    if (!this.potion.label && i.potion.label) {
-      this.potion.label = i.potion.label;
-    } else if (this.potion.label && i.potion.label) {
-      this.potion.label = null;
-      this.potion.prompt = null;
+    // this and i are flipped for some reason?
+    // i may be understanding my own code wrong
+    if (this.potion.label && !i.potion.label) {
+      i.potion.label = this.potion.label;
+    } else if (!this.potion.label && i.potion.label) {
+      i.potion.label = null;
+      i.potion.prompt = null;
     }
 
     this.size = sum;
@@ -472,7 +479,7 @@ class Ingredient {
         let input = this.lastElementChild.value;
 
         if (input.trim() == "") {
-          input = "unlabeled";
+          input = " ";
         }
 
         r.potion.label = input;
@@ -492,9 +499,9 @@ class Ingredient {
   updateName() {
     if (this.isPotion()) {
       if (!this.potion.label && !this.potion.prompt) {
-        this.prompt("you label the bottle...", "unlabeled");
+        this.prompt("you label the bottle...", " ");
       } else {
-        this.potion.label = this.potion.label || "unlabeled";
+        this.potion.label = this.potion.label || " ";
       }
       this.name = this.potion.label;
       return;
@@ -537,7 +544,6 @@ class Ingredient {
       if (array.length != types.length) continue check;
 
       for (let index in types) {
-        console.log(array, types[index]);
         if (!array.includes(types[index])) continue check;
       }
 
