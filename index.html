@@ -16,9 +16,34 @@
         @import url('https://fonts.googleapis.com/css2?family=Schoolbell&display=swap');
 
         :root {
-            --bg: #fff;
-            --color: #2e231b;
-            --highlight: rgba(78, 172, 186,0.3);
+            --light-color: #2e231b;
+            --light-bg: url("textures/paper.jpg");
+            --light-bg-underlay: #fff;
+            --light-highlight: rgba(78, 172, 186,0.3);
+            --light-blend-mode: multiply;
+            --light-box-bg: unset;
+            --light-box-border: none;
+            --light-half-underlay: rgba(255,255,255,0.5);
+
+            --dark-bg: #171717;
+            --dark-color: #aaaab0;
+            --dark-bg-underlay: var(--dark-bg);
+            --dark-highlight: #67a192;
+            --dark-blend-mode: lighten;
+            --dark-box-bg: none !important;
+            --dark-box-border: 1px solid var(--color);
+            --dark-half-underlay: rgba(23, 23, 23,0.5);
+
+            background: var(--bg);
+
+            --bg-underlay: var(--light-bg-underlay);
+            --bg: var(--light-bg);
+            --color: var(--light-color);
+            --highlight: var(--light-highlight);
+            --blend-mode: var(--light-blend-mode);
+            --box-bg: var(--light-box-bg);
+            --box-border: var(--light-box-border);
+            --half-underlay: var(--light-half-underlay);
 
             --cursive: 'La Belle Aurore', cursive;
             --print: 'Schoolbell', sans-serif;
@@ -52,7 +77,7 @@
             -webkit-font-smoothing: none;
             font-family: var(--serif);
             font-size: var(--font-size);
-            background: url("textures/paper.jpg");
+            background: var(--light-bg);
             background-size: 70%;
             margin: 0;
             color: var(--color);
@@ -64,7 +89,6 @@
             position: absolute;
             left: 50%;
             top: 10%;
-            height: 80%;
             padding-left: 3em;
             padding-right: 3em;
             transform: translateX(-50%);
@@ -72,7 +96,7 @@
             width: var(--width);
             text-align: justify;
 
-            mix-blend-mode: multiply;
+            mix-blend-mode: var(--blend-mode);
         }
 
         .scene {
@@ -92,15 +116,17 @@
 
         .box {
             position: relative;
+            background: var(--box-bg);
             /*https://kovart.github.io/dashed-border-generator/*/
             background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='black' stroke-width='1' stroke-dasharray='100%2c 7%2c 20%2c 10%2c 50%2c 9%2c 30%2c 2%2c 100%2c 5' stroke-dashoffset='24'/%3e%3c/svg%3e");
+            border: var(--box-border);
             padding: 1em;
             box-sizing: border-box;
         }
         .titled::before {
             position: absolute;
             content: "title";
-            background: var(--bg);
+            background: var(--bg-underlay);
             margin-top: -1.5em;
             padding-left: 0.5em;
             padding-right: 0.5em;
@@ -194,7 +220,7 @@
         }
 
         .draggable, .dragging {
-            color: white;
+            color: var(--light-bg-underlay);
         }
         .inv .draggable {
             color: var(--color);
@@ -300,6 +326,11 @@
             transition: border 200ms;
         }
 
+        input {
+            background: var(--bg-underlay);
+            color: var(--color);
+        }
+
         .textarea:focus, input:focus{
             outline: none;
             border-color: var(--highlight);
@@ -314,7 +345,7 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            background-color: white;
+            background-color: var(--bg-underlay);
             transform: translate(-50%,-50%);
             font-style: italic;
         }
@@ -323,7 +354,7 @@
             opacity: 0.1;
         }
         .menubutton {
-            color: white;
+            color: var(--bg-underlay);
             text-shadow: -1px 0 var(--color), 0 1px var(--color), 1px 0 var(--color), 0 -1px var(--color);
             cursor: pointer;
             transition: text-shadow 200ms, color 200ms;
@@ -334,7 +365,7 @@
         }
         .menubutton.selected {
             color: var(--color);
-            text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+            text-shadow: -1px 0 var(--bg-underlay), 0 1px var(--bg-underlay), 1px 0 var(--bg-underlay), 0 -1px var(--bg-underlay);
         }
         .selected:hover {
             cursor: default;
@@ -359,16 +390,16 @@
         }
 
         .portrait img {
-            background: white;
+            background: var(--bg-underlay);
             width: 100%;
             height: 8em;
             display: block;
-            object-fit: scale-down;
+            object-fit: cover;
             -webkit-transform: scaleX(-1);
             transform: scaleX(-1);
         }
         .portrait {
-            background: rgba(255,255,255,0.5);
+            background: var(--half-underlay);
             width: 7em;
             font-family: var(--handwritten);
             margin-right: 1em;
@@ -418,6 +449,7 @@
             padding: 0;
             transition: color 200ms;
             line-height: var(--font-size);
+            color: var(--color);
         }
         button:hover {
             color: var(--highlight);
@@ -454,7 +486,7 @@
             <span class="menubutton" onclick="scene('workshop')">workshop</span>
             <span class="menubutton" onclick="scene('lobby')">lobby</span>
             <!-- settings, player stats, log -->
-            <span style="float:right" class="menubutton" onclick="scene('log')">you</span>
+            <span style="float:right" class="menubutton" onclick="scene('log')">profile</span>
         </h1>
 
         <div id="workshop" class="scene">
@@ -562,7 +594,7 @@
                             <th>boring</th>
                         </tr>
                         <tr>
-                            <th>what the guild thinks of you</th>
+                            <th>what the institute thinks of you</th>
                             <th>stupid</th>
                         </tr>
                     </table>
@@ -596,6 +628,17 @@
                         <button onclick="css('--font-size', '17px', this)" class="selected" style="font-size:17px">Aa</button>
                         <button onclick="css('--font-size', '20px', this)" style="font-size:20px">Aa</button>
                     </div>
+                    <div class="li_buttons">
+                        theme...
+                        <br><span class="tab"></span>
+                        <button onclick="setTheme('light', this)" class="selected">
+                            paper light
+                        </button>
+                        <br><span class="tab"></span>
+                        <button onclick="setTheme('dark', this)">
+                            dark brown
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -607,13 +650,18 @@
 
 <script type="text/javascript">
     var game = {
-      workshop: {
-        fridge: [],
-        oven: [],
-        cabinet: [],
-        plate: []
-      },
+        inventory: [],
 
+        workshop: {
+            fridge: [],
+            oven: [],
+            cabinet: [],
+            plate: []
+        },
+
+        lobby: {
+
+        },
     };
 
     var ui = {

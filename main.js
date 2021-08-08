@@ -189,6 +189,13 @@ function scene(name) {
 
   mouse.el = null;
   mouse.prev = { x:null,y:null };
+
+  if (_scene == "workshop") {
+    for (let i in ref) {
+      let r = ref[i];
+      if (r.bg_el) r.updateBg();
+    }
+  }
 }
 
 function css(variable, value, el) {
@@ -201,4 +208,27 @@ function css(variable, value, el) {
   el.classList.add("selected");
 
   ui.root.style.setProperty(variable, value);
+
+  for (let i in ref) {
+    let r = ref[i];
+    if (r.bg_el) r.updateBg();
+  }
+}
+
+function setTheme(mode, el) {
+  var variables = [
+    "--bg-underlay",
+    "--bg",
+    "--color",
+    "--highlight",
+    "--blend-mode",
+    "--box-bg",
+    "--box-border",
+    "--half-underlay"
+  ];
+
+  for (let i in variables) {
+    let v = variables[i];
+    css(v, "var(--"+mode+"-"+v.substring(2)+")", el);
+  }
 }

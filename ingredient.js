@@ -160,11 +160,11 @@ class Ingredient {
       this.bg_el.style.display = "none";
     }
 
-    this.bg_el.style.width = this.el.offsetWidth+"px";
-    this.bg_el.style.height = this.el.offsetHeight+"px";
-
     let elbox = this.el.getBoundingClientRect();
     let cbox = ui.container.getBoundingClientRect();
+
+    this.bg_el.style.width = elbox.width+"px";
+    this.bg_el.style.height = elbox.height+"px";
 
     this.bg_el.style.top = elbox.top-cbox.top+"px";
     this.bg_el.style.left = elbox.left-cbox.left+"px";
